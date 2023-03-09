@@ -1,0 +1,33 @@
+name: ronin-masscan
+summary: A Ruby library and CLI for working with masscan.
+description: |
+  ronin-masscan is a Ruby library for working with masscan. ronin-masscan can
+  parse masscan scan files, convert masscan files into JSON or CSV, or import
+  masscan scan data into the ronin-db database.
+
+license: LGPL-3.0
+authors: Postmodern
+email: postmodern.mod3@gmail.com
+homepage: https://ronin-rb.dev/
+has_yard: true
+
+metadata:
+  documentation_uri: https://ronin-rb.dev/docs/ronin-masscan
+  source_code_uri:   https://github.com/ronin-rb/ronin-masscan
+  bug_tracker_uri:   https://github.com/ronin-rb/ronin-masscan/issues
+  changelog_uri:     https://github.com/ronin-rb/ronin-masscan/blob/main/ChangeLog.md
+  rubygems_mfa_required: 'true'
+
+generated_files:
+ - man/ronin-masscan.1
+
+required_ruby_version: ">= 3.0.0"
+
+dependencies:
+  ruby-masscan: ~> 0.1
+  # Ronin dependencies:
+  ronin-core: ~> 0.1
+  ronin-db: ~> 0.2
+
+development_dependencies:
+  bundler: ~> 2.0
