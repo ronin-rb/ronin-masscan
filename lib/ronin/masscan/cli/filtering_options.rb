@@ -35,6 +35,14 @@ module Ronin
         #   The command class including {FilteringOptions}.
         #
         def self.included(command)
+          command.option :protocol, short: '-P',
+                                    value: {
+                                      type: [:tcp, :udp]
+                                    },
+                                    desc: 'Filters the targets by protocol' do |proto|
+                                      @protocols << proto
+                                    end
+
           command.option :ip, value: {
                                 type:  String,
                                 usage: 'IP'
@@ -85,6 +93,11 @@ module Ronin
                                               end
         end
 
+        # The protocols to filter the targets by.
+        #
+        # @return [Set<:tcp, :udp>]
+        attr_reader :protocols
+
         # The IPs to filter the targets by.
         #
         # @return [Set<String>]
@@ -119,6 +132,7 @@ module Ronin
         def initialize(**kwargs)
           super(**kwargs)
 
+          @protocols = Set.new
           @ips       = Set.new
           @ip_ranges = Set.new
           @ports     = Set.new
@@ -145,6 +159,10 @@ module Ronin
                     else
                       filter_status_targets(targets)
                     end
+
+          unless @protocols.empty?
+            targets = filter_targets_by_protocol(targets)
+          end
 
           unless @ips.empty?
             targets = filter_targets_by_ip(targets)
@@ -196,6 +214,21 @@ module Ronin
         def filter_banner_targets(targets)
           targets.filter do |target|
             target.kind_of?(::Masscan::Banner)
+          end
+        end
+
+        #
+        # Filters the targets by protocol
+        #
+        # @param [Enumerator::Lazy] targets
+        #   The targets to filter.
+        #
+        # @return [Enumerator::Lazy]
+        #   A lazy enumerator of the filtered targets.
+        #
+        def filter_targets_by_protocol(targets)
+          targets.filter do |target|
+            @protocols.include?(target.protocol)
           end
         end
 

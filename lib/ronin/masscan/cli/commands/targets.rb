@@ -42,6 +42,7 @@ module Ronin
         #         --print-ip-ports             Print IP:PORT pairs. (Default)
         #         --print-host-ports           Print HOST:PORT pairs
         #         --print-uris                 Print URIs
+        #     -P, --protocol tcp|udp           Filters the targets by protocol
         #         --ip IP                      Filters the targets by IP
         #         --ip-range CIDR              Filter the targets by IP range
         #         -p, --ports {PORT | PORT1-PORT2},...

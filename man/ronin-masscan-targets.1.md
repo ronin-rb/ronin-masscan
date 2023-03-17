@@ -32,6 +32,9 @@ Converts  masscan scan files into a list of targets.
   Print URIs for each target that has either `http` or `https` services
   (ex: `https://example.com` or `http://example.com:8080`).
 
+`-P`, `--protocol` `tcp`|`udp`
+  Filters the targets by the protocol of the open port.
+
 `--ip` *IP*
   Filters the targets by a specific IP address.
 
