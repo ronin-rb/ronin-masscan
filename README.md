@@ -30,6 +30,14 @@ Import a binary `masscan` scan file:
 $ ronin-masscan import masscan.bin
 ```
 
+Perform a masscan scan and import it's results into the [ronin-db]\:
+
+```shell
+$ ronin-masscan scan --import -- 192.168.1.1 -p22,25,80,443
+```
+
+Parse and filter an nmap XML scan file:
+
 Import a JSON `masscan` scan file:
 
 ```shell
