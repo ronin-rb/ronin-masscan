@@ -9,10 +9,10 @@ platform :jruby do
 end
 
 # Ronin dependencies
-# gem 'ronin-core',     '~> 0.1', github: 'ronin-rb/ronin-core',
-#                                 branch: 'main'
-gem 'ronin-db', '~> 0.2', github: 'ronin-rb/ronin-db',
-                          branch: '0.2.0'
+gem 'ronin-core', '~> 0.2', github: 'ronin-rb/ronin-core',
+                            branch: '0.2.0'
+gem 'ronin-db',   '~> 0.2', github: 'ronin-rb/ronin-db',
+                            branch: '0.2.0'
 
 group :development do
   gem 'rake'

@@ -97,7 +97,7 @@ $ ronin-masscan convert masscan.bin masscan.json
 
 * [Ruby] >= 3.0.0
 * [ruby-masscan] ~> 0.1
-* [ronin-core] ~> 0.1
+* [ronin-core] ~> 0.2
 * [ronin-db] ~> 0.2
 
 ## Install
