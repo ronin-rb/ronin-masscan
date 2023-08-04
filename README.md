@@ -96,6 +96,7 @@ $ ronin-masscan convert masscan.bin masscan.json
 ## Requirements
 
 * [Ruby] >= 3.0.0
+* [masscan] >= 1.0.0
 * [ruby-masscan] ~> 0.1
 * [ronin-core] ~> 0.2
 * [ronin-db] ~> 0.2
@@ -147,6 +148,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 
 [Ruby]: https://www.ruby-lang.org
+[masscan]: https://github.com/robertdavidgraham/masscan#readme
 [ruby-masscan]: https://github.com/postmodern/ruby-masscan#readme
 [ronin-support]: https://github.com/ronin-rb/ronin-support#readme
 [ronin-core]: https://github.com/ronin-rb/ronin-core#readme
