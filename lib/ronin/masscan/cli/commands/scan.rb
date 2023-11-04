@@ -165,7 +165,7 @@ module Ronin
           #
           def save_output(path,output, format: )
             # the format has been explicitly specified
-            Masscan::Converter.convert_file(path,output, format: format)
+            Converter.convert_file(path,output, format: format)
           end
 
           #
