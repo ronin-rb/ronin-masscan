@@ -63,11 +63,6 @@ module Ronin
 
           man_page 'ronin-masscan-convert.1'
 
-          # The desired output format.
-          #
-          # @return [:json, :csv, nil]
-          attr_reader :format
-
           #
           # Runs the `ronin-masscan convert` command.
           #
