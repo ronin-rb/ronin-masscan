@@ -76,5 +76,28 @@ module Ronin
         return status
       end
     end
+
+    #
+    # Parses a masscan output file.
+    #
+    # @param [String] path
+    #   The path to the output file.
+    #
+    # @param [:binary, :list, :json, :ndjson] format
+    #   The format of the output file. Defaults to {infer_format}.
+    #
+    # @return [::Masscan::OutputFile]
+    #   The parsed masscan output file.
+    #
+    # @raise [ArgumentError]
+    #   The output format was not given and it cannot be inferred.
+    #
+    # @see https://rubydoc.info/gems/ruby-masscan/Masscan/OutputFile
+    #
+    # @api public
+    #
+    def self.parse(path,**kwargs)
+      ::Masscan::OutputFile.new(path,**kwargs)
+    end
   end
 end
