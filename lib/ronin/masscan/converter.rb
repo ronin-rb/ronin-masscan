@@ -52,14 +52,25 @@ module Ronin
       # @param [String] dest
       #   The output file path.
       #
+      # @param [:binary, :list, :json, :ndjson, nil] input_format
+      #   The explicit format of the input masscan scan file.
+      #   If not specified the input format will be inferred from the file's
+      #   extension.
+      #
       # @param [:json, :csv] format
       #   The format to convert the masscan scan file into. If not specified
       #   it will be inferred from the output file's extension.
       #
       # @api public
       #
-      def self.convert_file(src,dest, format: infer_format_for(dest))
-        scan_file = ::Masscan::OutputFile.new(src)
+      def self.convert_file(src,dest, input_format: nil,
+                                      format:       infer_format_for(dest))
+        scan_file = if input_format
+                      ::Masscan::OutputFile.new(src, format: input_format)
+                    else
+                      ::Masscan::OutputFile.new(src)
+                    end
+
         converter = Converters[format]
 
         File.open(dest,'w') do |output|

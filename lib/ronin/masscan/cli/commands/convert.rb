@@ -30,21 +30,29 @@ module Ronin
         #
         # ## Usage
         #
-        #     ronin-masscan convert [--format json|csv] MASSCAN_FILE [OUTPUT_FILE]
+        #     ronin-masscan convert [options] INPUT_FILE [OUTPUT_FILE]
         #
         # ## Option
         #
+        #     -I binary|list|json|ndjson,      The input format
+        #         --input-format
         #     -F, --format json|csv            The desired output format
         #     -h, --help                       Print help information
         #
         # ## Arguments
         #
-        #     MASSCAN_FILE                     The input masscan scan file to parse
+        #     INPUT_FILE                       The input masscan scan file to parse
         #     OUTPUT_FILE                      The output file
         #
         class Convert < Command
 
-          usage '[--format json|csv] MASSCAN_FILE [OUTPUT_FILE]'
+          usage '[options] MASSCAN_FILE [OUTPUT_FILE]'
+
+          option :input_format, short: '-I',
+                                value: {
+                                  type: [:binary, :list, :json, :ndjson]
+                                },
+                                desc: 'The input format'
 
           option :format, short: '-F',
                           value: {
@@ -53,8 +61,8 @@ module Ronin
                           },
                           desc: 'The desired output format'
 
-          argument :masscan_file, required: true,
-                                  desc:     'The input masscan scan file to convert'
+          argument :input_file, required: true,
+                                desc:     'The input masscan scan file to convert'
 
           argument :output_file, required: false,
                                  desc:     'The output file'
@@ -66,23 +74,27 @@ module Ronin
           #
           # Runs the `ronin-masscan convert` command.
           #
-          # @param [String] masscan_file
-          #   The XML input file to parse.
+          # @param [String] input_file
+          #   The masscan scan file to parse.
           #
           # @param [String] output_file
           #   The output file to write to.
           #
-          def run(masscan_file,output_file=nil)
-            unless File.file?(masscan_file)
-              print_error "no such file or directory: #{masscan_file}"
+          def run(input_file,output_file=nil)
+            unless File.file?(input_file)
+              print_error "no such file or directory: #{input_file}"
               exit(-1)
             end
 
+            masscan_file = open_masscan_file(input_file)
+
             if output_file
-              if (format = options[:format])
-                Converter.convert_file(masscan_file,output_file, format: format)
-              else
-                Converter.convert_file(masscan_file,output_file)
+              format = options.fetch(:format) do
+                         Converter.infer_format_for(output_file)
+                       end
+
+              File.open(output_file,'w') do |output|
+                Converter.convert(masscan_file,output, format: format)
               end
             else
               unless (format = options[:format])
@@ -90,10 +102,28 @@ module Ronin
                 exit(-1)
               end
 
-              masscan_file = ::Masscan::OutputFile.new(masscan_file)
-
               Converter.convert(masscan_file,stdout, format: format)
             end
+          end
+
+          #
+          # Opens a masscan scan file.
+          #
+          # @param [String] path
+          #   The path to the masscan scan file.
+          #
+          # @return [::Masscan::OutputFile]
+          #   The opened masscan scan file.
+          #
+          def open_masscan_file(path)
+            if options[:input_format]
+              ::Masscan::OutputFile.new(path, format: options[:input_format])
+            else
+              ::Masscan::OutputFile.new(path)
+            end
+          rescue ArgumentError => error
+            print_error(error.message)
+            exit(1)
           end
 
         end
