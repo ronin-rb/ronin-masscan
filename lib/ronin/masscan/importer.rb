@@ -38,8 +38,6 @@ module Ronin
     #       puts "Imported #{record.inspect}!"
     #     end
     #
-    # @api private
-    #
     module Importer
       #
       # Imports a masscan output file into the database.
