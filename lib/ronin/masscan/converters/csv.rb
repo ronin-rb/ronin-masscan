@@ -47,7 +47,7 @@ module Ronin
         #
         # Converts a masscan scan file to CSV.
         #
-        # @param [::Masscan::OutputFile] massscan_file
+        # @param [::Masscan::OutputFile] masscan_file
         #   The masscan scan file to convert to CSV.
         #
         # @param [String, IO] output

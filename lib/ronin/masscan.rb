@@ -83,8 +83,12 @@ module Ronin
     # @param [String] path
     #   The path to the output file.
     #
-    # @param [:binary, :list, :json, :ndjson] format
-    #   The format of the output file. Defaults to {infer_format}.
+    # @param [Hash{Symbol => Object}] kwargs
+    #   Additional keyword arguments for `::Masscan::OutputFile.new`.
+    #
+    # @option kwargs [:binary, :list, :json, :ndjson] :format
+    #   The format of the output file. If not specified, the format will be
+    #   inferred from the path's file extension.
     #
     # @return [::Masscan::OutputFile]
     #   The parsed masscan output file.

@@ -238,9 +238,6 @@ module Ronin
         # @param [Enumerator::Lazy] targets
         #   The targets to filter.
         #
-        # @param [String] ip
-        #   The IP address to filter by.
-        #
         # @return [Enumerator::Lazy]
         #   A lazy enumerator of the filtered targets.
         #
