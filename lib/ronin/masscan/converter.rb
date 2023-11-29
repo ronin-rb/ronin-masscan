@@ -52,6 +52,10 @@ module Ronin
       # @param [String] dest
       #   The output file path.
       #
+      # @param [:json, :csv] format
+      #   The format to convert the masscan scan file into. If not specified
+      #   it will be inferred from the output file's extension.
+      #
       # @api public
       #
       def self.convert_file(src,dest, format: infer_format_for(dest))
