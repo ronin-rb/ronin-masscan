@@ -55,7 +55,7 @@ module Ronin
       # @api public
       #
       def self.convert_file(src,dest, format: infer_format_for(dest))
-        scan_file = ::Masscan::OutputFile.open(src)
+        scan_file = ::Masscan::OutputFile.new(src)
         converter = Converters[format]
 
         File.open(dest,'w') do |output|
