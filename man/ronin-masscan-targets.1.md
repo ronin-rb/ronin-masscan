@@ -53,23 +53,23 @@ Converts  masscan scan files into a list of targets.
 
 Print `IP:PORT` pairs from the masscan scan file:
 
-    ronin-masscan targets --print-ip-ports masscan.bin
+    $ ronin-masscan targets --print-ip-ports masscan.bin
 
 Print `IP:PORT` pairs with ports 22, 80, or 443, from the masscan scan file:
 
-    ronin-masscan targets --print-ip-ports --ports 22,80,443 masscan.bin
+    $ ronin-masscan targets --print-ip-ports --ports 22,80,443 masscan.bin
 
 Print `HOST:PORT` pairs from the masscan scan file:
 
-    ronin-masscan targets --print-host-ports masscan.bin
+    $ ronin-masscan targets --print-host-ports masscan.bin
 
 Print target hostnames from the masscan scan file:
 
-    ronin-masscan targets --print-hosts --with-port 22 masscan.bin
+    $ ronin-masscan targets --print-hosts --with-port 22 masscan.bin
 
 Print URIs from the masscan scan file:
 
-    ronin-masscan targets --print-uris masscan.bin
+    $ ronin-masscan targets --print-uris masscan.bin
 
 ## AUTHOR
 

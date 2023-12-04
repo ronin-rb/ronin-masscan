@@ -68,11 +68,11 @@ Runs `masscan` and outputs data as JSON or CSV or imports into the database.
 
 Port scans `192.168.1.1` and save the scan results to a JSON file:
 
-    ronin-masscan scan -o scan.json -- 192.168.1.1 -p80,443,...
+    $ ronin-masscan scan -o scan.json -- 192.168.1.1 -p80,443,...
 
 Service scans `192.168.1.1` and saves the scan results to the Ronin database:
 
-    ronin-masscan scan --import -- 192.168.1.1 -p80,443,...
+    $ ronin-masscan scan --import -- 192.168.1.1 -p80,443,...
 
 ## AUTHOR
 
