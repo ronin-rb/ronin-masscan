@@ -1,5 +1,9 @@
 # ronin-masscan-import 1 "2023-03-01" Ronin "User Manuals"
 
+## NAME
+
+ronin-masscan-import - Imports a masscan scan file into ronin-db
+
 ## SYNOPSIS
 
 `ronin-masscan import` [*options*] *MASSCAN_FILE*

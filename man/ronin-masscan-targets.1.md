@@ -1,5 +1,9 @@
 # ronin-masscan-targets 1 "2023-03-01" Ronin "User Manuals"
 
+## NAME
+
+ronin-masscan-targets - Converts  masscan scan files into a list of targets
+
 ## SYNOPSIS
 
 `ronin-masscan targets` [options] *MASSCAN_FILE*

@@ -1,5 +1,9 @@
 # ronin-masscan-convert 1 "2023-03-01" Ronin "User Manuals"
 
+## NAME
+
+ronin-masscan-scan - Runs masscan and outputs data as JSON or CSV or imports into the database
+
 ## SYNOPSIS
 
 `ronin-masscan scan` [options] `--` *masscan_options* ...

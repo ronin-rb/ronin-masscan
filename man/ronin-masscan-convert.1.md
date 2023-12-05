@@ -1,5 +1,9 @@
 # ronin-masscan-convert 1 "2023-03-01" Ronin "User Manuals"
 
+## NAME
+
+ronin-masscan-convert - Converts an masscan scan file to JSON or CSV
+
 ## SYNOPSIS
 
 `ronin-masscan convert` [`--format` `json`\|`csv`] *INPUT_FILE* [*OUTPUT_FILE*]
