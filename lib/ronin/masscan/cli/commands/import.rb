@@ -59,6 +59,8 @@ module Ronin
           argument :masscan_file, required: true,
                                   desc:     'The masscan scan file to import'
 
+          description 'Imports a masscan scan file into ronin-db'
+
           man_page 'ronin-masscan-import.1'
 
           #
