@@ -2,7 +2,7 @@
 
 ## NAME
 
-ronin-masscan-targets - Converts  masscan scan files into a list of targets
+ronin-masscan-targets - Converts masscan scan files into a list of targets
 
 ## SYNOPSIS
 
