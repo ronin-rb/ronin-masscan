@@ -21,9 +21,9 @@ metadata:
 generated_files:
  - man/ronin-masscan.1
  - man/ronin-masscan-convert.1
+ - man/ronin-masscan-dump.1
  - man/ronin-masscan-import.1
  - man/ronin-masscan-scan.1
- - man/ronin-masscan-targets.1
 
 required_ruby_version: ">= 3.0.0"
 

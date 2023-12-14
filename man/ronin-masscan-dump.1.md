@@ -1,16 +1,26 @@
-# ronin-masscan-targets 1 "2023-03-01" Ronin "User Manuals"
+# ronin-masscan-dump 1 "2023-03-01" Ronin "User Manuals"
 
 ## NAME
 
-ronin-masscan-targets - Converts masscan scan files into a list of targets
+ronin-masscan-dump - Dumps the scanned ports from masscan scan file(s)
 
 ## SYNOPSIS
 
-`ronin-masscan targets` [options] *MASSCAN_FILE*
+`ronin-masscan dump` [options] *MASSCAN_FILE*
 
 ## DESCRIPTION
 
-Converts  masscan scan files into a list of targets.
+Dumps the scanned ports from masscan scan files into a variety of formats. The
+output formats include:
+
+* IP
+* Hostname
+* `IP:PORT`
+* `HOST:PORT`
+* URI
+
+The command also supports filtering the scanned ports by IP, IP range, domain,
+or port.
 
 ## ARGUMENTS
 
@@ -57,23 +67,23 @@ Converts  masscan scan files into a list of targets.
 
 Print `IP:PORT` pairs from the masscan scan file:
 
-    $ ronin-masscan targets --print-ip-ports masscan.bin
+    $ ronin-masscan dump --print-ip-ports masscan.bin
 
 Print `IP:PORT` pairs with ports 22, 80, or 443, from the masscan scan file:
 
-    $ ronin-masscan targets --print-ip-ports --ports 22,80,443 masscan.bin
+    $ ronin-masscan dump --print-ip-ports --ports 22,80,443 masscan.bin
 
 Print `HOST:PORT` pairs from the masscan scan file:
 
-    $ ronin-masscan targets --print-host-ports masscan.bin
+    $ ronin-masscan dump --print-host-ports masscan.bin
 
 Print target hostnames from the masscan scan file:
 
-    $ ronin-masscan targets --print-hosts --with-port 22 masscan.bin
+    $ ronin-masscan dump --print-hosts --with-port 22 masscan.bin
 
 Print URIs from the masscan scan file:
 
-    $ ronin-masscan targets --print-uris masscan.bin
+    $ ronin-masscan dump --print-uris masscan.bin
 
 ## AUTHOR
 

@@ -36,10 +36,10 @@ Arguments:
 
 Commands:
     convert
+    dump
     help
     import
     scan
-    targets
 ```
 
 Import a binary `masscan` scan file:
@@ -62,22 +62,22 @@ Import a JSON `masscan` scan file:
 $ ronin-masscan import masscan.json
 ```
 
-Convert an masscan scan file to a list of `IP:PORT` pairs:
+Dumps a masscan scan file to a list of `IP:PORT` pairs:
 
 ```shell
-$ ronin-masscan targets --print-ip-ports masscan.bin
+$ ronin-masscan dump --print-ip-ports masscan.bin
 ```
 
-Convert an masscan scan file to a list of `HOST:PORT` pairs:
+Dump a masscan scan file to a list of `HOST:PORT` pairs:
 
 ```shell
-$ ronin-masscan targets --print-host-ports masscan.bin
+$ ronin-masscan dump --print-host-ports masscan.bin
 ```
 
-Convert an masscan scan file to a list of `http`://` or `https://` URIs:
+Dump a masscan scan file to a list of `http`://` or `https://` URIs:
 
 ```shell
-$ ronin-masscan targets --print-uris masscan.bin
+$ ronin-masscan dump --print-uris masscan.bin
 ```
 
 Convert a binary `masscan` scan file to CSV:

@@ -29,11 +29,11 @@ module Ronin
     class CLI
       module Commands
         #
-        # Converts  masscan scan files into a list of targets.
+        # Dumps the scanned ports from masscan scan file(s).
         #
         # ## Usage
         #
-        #     ronin-masscan targets [options] XML_FILE [...]
+        #     ronin-masscan dump [options] XML_FILE [...]
         #
         # ## Options
         #
@@ -55,13 +55,13 @@ module Ronin
         #
         # ## Examples
         #
-        #     ronin-masscan targets --print-ip-ports masscan.bin
-        #     ronin-masscan targets --print-ip-ports --ports 22,80,443 masscan.bin
-        #     ronin-masscan targets --print-host-ports masscan.bin
-        #     ronin-masscan targets --print-hosts --with-port 22 masscan.bin
-        #     ronin-masscan targets --print-uris masscan.bin
+        #     ronin-masscan dump --print-ip-ports masscan.bin
+        #     ronin-masscan dump --print-ip-ports --ports 22,80,443 masscan.bin
+        #     ronin-masscan dump --print-host-ports masscan.bin
+        #     ronin-masscan dump --print-hosts --with-port 22 masscan.bin
+        #     ronin-masscan dump --print-uris masscan.bin
         #
-        class Targets < Command
+        class Dump < Command
 
           usage '[options] MASSCAN_FILE [...]'
 
@@ -99,9 +99,9 @@ module Ronin
             '--print-uris masscan.bin'
           ]
 
-          description 'Converts  masscan scan files into a list of targets'
+          description 'Dumps the scanned ports from masscan scan file(s)'
 
-          man_page 'ronin-masscan-targets.1'
+          man_page 'ronin-masscan-dump.1'
 
           #
           # Initializes the command.
@@ -116,7 +116,7 @@ module Ronin
           end
 
           #
-          # Runs the `ronin-masscan targets` command.
+          # Runs the `ronin-masscan dump` command.
           #
           # @param [Array<String>] masscan_files
           #   The nmap `.xml` files to parse.
