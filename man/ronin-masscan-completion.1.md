@@ -1,4 +1,4 @@
-# ronin-masscan-completion 1 "2024-01-01" Ronin Repos "User Manuals"
+# ronin-masscan-completion 1 "2024-01-01" Ronin Masscan "User Manuals"
 
 ## NAME
 
