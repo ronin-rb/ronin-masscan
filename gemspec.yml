@@ -21,6 +21,7 @@ metadata:
 generated_files:
  - data/completions/ronin-masscan
  - man/ronin-masscan.1
+ - man/ronin-masscan-completion.1
  - man/ronin-masscan-convert.1
  - man/ronin-masscan-dump.1
  - man/ronin-masscan-import.1
