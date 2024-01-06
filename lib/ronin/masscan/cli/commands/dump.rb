@@ -33,7 +33,7 @@ module Ronin
         #
         # ## Usage
         #
-        #     ronin-masscan dump [options] XML_FILE [...]
+        #     ronin-masscan dump [options] MASSCAN_FILE [...]
         #
         # ## Options
         #
@@ -51,7 +51,7 @@ module Ronin
         #
         # ## Arguments
         #
-        #     MASSCAN_FILE ...                 The nmap XML file(s) to parse
+        #     MASSCAN_FILE ...                 The masscan scan file(s) to parse
         #
         # ## Examples
         #
@@ -119,7 +119,7 @@ module Ronin
           # Runs the `ronin-masscan dump` command.
           #
           # @param [Array<String>] masscan_files
-          #   The nmap `.xml` files to parse.
+          #   The masscan scan file(s) to parse.
           #
           def run(*masscan_files)
             masscan_files.each do |masscan_file|
@@ -132,9 +132,9 @@ module Ronin
           end
 
           #
-          # Prints the targets.
+          # Prints the target.
           #
-          # @param [::Nmap::XML::Host] host
+          # @param [::Masscan::Status, ::Masscan::Banner] host
           #
           def print_target(host)
             case @mode
