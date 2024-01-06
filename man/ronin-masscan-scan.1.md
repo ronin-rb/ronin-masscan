@@ -1,4 +1,4 @@
-# ronin-masscan-convert 1 "2023-03-01" Ronin "User Manuals"
+# ronin-masscan-convert 1 "2023-03-01" Ronin Masscan "User Manuals"
 
 ## NAME
 

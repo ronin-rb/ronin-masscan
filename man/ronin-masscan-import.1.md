@@ -1,4 +1,4 @@
-# ronin-masscan-import 1 "2023-03-01" Ronin "User Manuals"
+# ronin-masscan-import 1 "2023-03-01" Ronin Masscan "User Manuals"
 
 ## NAME
 
