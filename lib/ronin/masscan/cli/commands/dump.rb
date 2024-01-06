@@ -123,7 +123,12 @@ module Ronin
           #
           def run(*masscan_files)
             masscan_files.each do |masscan_file|
-              output_file = ::Masscan::OutputFile.new(masscan_file)
+              output_file = begin
+                              ::Masscan::OutputFile.new(masscan_file)
+                            rescue ArgumentError => error
+                              print_error(error.message)
+                              exit(1)
+                            end
 
               filter_targets(output_file).each do |target|
                 print_target(target)
