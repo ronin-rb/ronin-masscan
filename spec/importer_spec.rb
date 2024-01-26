@@ -5,9 +5,10 @@ require 'ronin/db'
 
 RSpec.describe Ronin::Masscan::Importer do
   let(:output_file) { instance_double('Masscan::OutputFile') }
-  let(:path)        { '/path/to/file' }
 
   describe '.import_file' do
+    let(:path) { '/path/to/file' }
+
     before do
       allow(Masscan::OutputFile).to receive(:new).with(path).and_return(output_file)
     end
@@ -20,7 +21,6 @@ RSpec.describe Ronin::Masscan::Importer do
   end
 
   describe '.import' do
-    let(:output_file)    { instance_double("Masscan::OutputFile") }
     let(:status_record)  { Masscan::Status.new(protocol: :tcp, port: 80, ip: "1.1.1.1", status: "status", timestamp: Time.now) }
     let(:banner_record)  { instance_double("Masscan::Banner") }
     let(:unknown_record) { 'unknown_record' }
@@ -44,7 +44,7 @@ RSpec.describe Ronin::Masscan::Importer do
       it 'must import status' do
         expect(subject).to receive(:import_status)
 
-        subject.import(output_file) {}
+        subject.import(output_file) { |f| f }
       end
     end
 
