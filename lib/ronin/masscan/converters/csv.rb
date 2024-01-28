@@ -34,7 +34,7 @@ module Ronin
         # @param [::Masscan::OutputFile] masscan_file
         #   The opened masscan scan file.
         #
-        # @param [IO, nil] output
+        # @param [String, IO] output
         #   Optional output stream to write the CSV to.
         #
         # @return [String]
