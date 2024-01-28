@@ -8,7 +8,7 @@ RSpec.describe Ronin::Masscan::Importer do
   let(:output_file)  { Masscan::OutputFile.new(masscan_path) }
 
   before(:all) do
-    Ronin::DB.connect('sqlite3::memory')
+    Ronin::DB.connect('sqlite3::memory:')
   end
 
   after(:all) do
