@@ -12,6 +12,3 @@
 *.log
 *.swp
 *~
-:memory
-:memory-shm
-:memory-wal
