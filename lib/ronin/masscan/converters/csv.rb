@@ -34,13 +34,13 @@ module Ronin
         # @param [::Masscan::OutputFile] masscan_file
         #   The opened masscan scan file.
         #
-        # @param [IO, nil] output
+        # @param [String, IO] output
         #   Optional output stream to write the CSV to.
         #
         # @return [String]
         #   The raw CSV.
         #
-        def self.convert(masscan_file,output=nil)
+        def self.convert(masscan_file,output=String.new)
           masscan_file_to_csv(masscan_file,output)
         end
 
