@@ -40,7 +40,7 @@ module Ronin
         # @return [String]
         #   The raw CSV.
         #
-        def self.convert(masscan_file,output=nil)
+        def self.convert(masscan_file,output=String.new)
           masscan_file_to_csv(masscan_file,output)
         end
 
