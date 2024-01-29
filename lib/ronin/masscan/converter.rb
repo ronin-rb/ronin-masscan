@@ -100,7 +100,7 @@ module Ronin
           Converters[format].convert(masscan_file,output)
         else
           output = StringIO.new
-          convert(masscan_file,output, format:)
+          convert(masscan_file,output, format: format)
           output.string
         end
       end
