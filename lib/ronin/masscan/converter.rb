@@ -90,7 +90,7 @@ module Ronin
       # @param [:json, :csv] format
       #   The desired convert to convert the parsed masscan scan file to.
       #
-      # @return [String]
+      # @return [IO, String]
       #   The converted masscan scan file.
       #
       # @api public
