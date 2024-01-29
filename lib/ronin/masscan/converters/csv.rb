@@ -27,6 +27,8 @@ module Ronin
       #
       # Handles converting masscan scan files into CSV.
       #
+      # @api private
+      #
       module CSV
         #
         # Converts the masscan scan file to CSV.
@@ -34,13 +36,13 @@ module Ronin
         # @param [::Masscan::OutputFile] masscan_file
         #   The opened masscan scan file.
         #
-        # @param [String, IO] output
+        # @param [StringIO, IO] output
         #   Optional output stream to write the CSV to.
         #
         # @return [String]
         #   The raw CSV.
         #
-        def self.convert(masscan_file,output=String.new)
+        def self.convert(masscan_file,output)
           masscan_file_to_csv(masscan_file,output)
         end
 
@@ -50,13 +52,13 @@ module Ronin
         # @param [::Masscan::OutputFile] masscan_file
         #   The masscan scan file to convert to CSV.
         #
-        # @param [String, IO] output
+        # @param [StringIO, IO] output
         #   The optional output to write the CSV to.
         #
-        # @return [String, IO]
+        # @return [StringIO, IO]
         #   The CSV output.
         #
-        def self.masscan_file_to_csv(masscan_file,output=String.new)
+        def self.masscan_file_to_csv(masscan_file,output)
           masscan_file_to_rows(masscan_file) do |row|
             output << ::CSV.generate_line(row)
           end

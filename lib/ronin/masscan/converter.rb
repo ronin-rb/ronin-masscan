@@ -84,7 +84,7 @@ module Ronin
       # @param [::Masscan::OutputFile] masscan_file
       #   The masscan scan file to convert.
       #
-      # @param [IO, String, nil] output
+      # @param [IO, nil] output
       #   Optional output to write the converted output to.
       #
       # @param [:json, :csv] format
@@ -96,7 +96,13 @@ module Ronin
       # @api public
       #
       def self.convert(masscan_file,output=nil, format: )
-        Converters[format].convert(masscan_file,*output)
+        if output
+          Converters[format].convert(masscan_file,output)
+        else
+          output = StringIO.new
+          convert(masscan_file,output, format:)
+          output.string
+        end
       end
 
       #
