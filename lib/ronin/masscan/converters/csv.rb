@@ -39,9 +39,6 @@ module Ronin
         # @param [StringIO, IO] output
         #   Optional output stream to write the CSV to.
         #
-        # @return [String]
-        #   The raw CSV.
-        #
         def self.convert(masscan_file,output)
           masscan_file_to_csv(masscan_file,output)
         end
@@ -55,8 +52,6 @@ module Ronin
         # @param [StringIO, IO] output
         #   The optional output to write the CSV to.
         #
-        # @return [StringIO, IO]
-        #   The CSV output.
         #
         def self.masscan_file_to_csv(masscan_file,output)
           masscan_file_to_rows(masscan_file) do |row|

@@ -39,9 +39,6 @@ module Ronin
         # @param [IO, StringIO] output
         #   Optional output stream to write the JSON to.
         #
-        # @return [String]
-        #   The raw JSON.
-        #
         def self.convert(masscan_file,output)
           masscan_file_to_json(masscan_file,output)
         end
@@ -54,9 +51,6 @@ module Ronin
         #
         # @param [IO, StringIO] output
         #   Optional output stream to write the JSON to.
-        #
-        # @return [String]
-        #   The raw JSON.
         #
         def self.masscan_file_to_json(masscan_file,output)
           ::JSON.dump(masscan_file_as_json(masscan_file),output)
