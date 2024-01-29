@@ -27,6 +27,8 @@ module Ronin
       #
       # Handles converting masscan scan files into JSON.
       #
+      # @api private
+      #
       module JSON
         #
         # Converts the masscan scan file to JSON.
@@ -34,13 +36,10 @@ module Ronin
         # @param [::Masscan::OutputFile] masscan_file
         #   The opened masscan scan file.
         #
-        # @param [IO, nil] output
+        # @param [IO, StringIO] output
         #   Optional output stream to write the JSON to.
         #
-        # @return [String]
-        #   The raw JSON.
-        #
-        def self.convert(masscan_file,output=nil)
+        def self.convert(masscan_file,output)
           masscan_file_to_json(masscan_file,output)
         end
 
@@ -50,13 +49,10 @@ module Ronin
         # @param [::Masscan::OutputFile] masscan_file
         #   The opened masscan scan file.
         #
-        # @param [IO, nil] output
+        # @param [IO, StringIO] output
         #   Optional output stream to write the JSON to.
         #
-        # @return [String]
-        #   The raw JSON.
-        #
-        def self.masscan_file_to_json(masscan_file,output=nil)
+        def self.masscan_file_to_json(masscan_file,output)
           ::JSON.dump(masscan_file_as_json(masscan_file),output)
         end
 
