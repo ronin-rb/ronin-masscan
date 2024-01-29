@@ -96,7 +96,7 @@ module Ronin
       # @api public
       #
       def self.convert(masscan_file,output=nil, format: )
-        Converters[format].convert(masscan_file,output)
+        Converters[format].convert(masscan_file,*output)
       end
 
       #
