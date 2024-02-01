@@ -8,7 +8,7 @@ RSpec.describe Ronin::Masscan::Converter do
   let(:masscan_path)  { File.join(fixtures_path, 'converter', 'masscan.json') }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:expected_json) do
-    "[{\"status\":\"open\",\"protocol\":\"tcp\",\"port\":80,\"reason\":[\"syn\",\"ack\"],\"ttl\":54,\"ip\":\"93.184.216.34\",\"timestamp\":\"2021-08-26 08:50:21 +0200\"}]"
+    "[{\"status\":\"open\",\"protocol\":\"tcp\",\"port\":80,\"reason\":[\"syn\",\"ack\"],\"ttl\":54,\"ip\":\"93.184.216.34\",\"timestamp\":\"2021-08-26 08:50:21 +0000\"}]"
   end
 
   describe '.convert_file' do
