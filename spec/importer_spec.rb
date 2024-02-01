@@ -4,7 +4,8 @@ require 'masscan/output_file'
 require 'ronin/db'
 
 RSpec.describe Ronin::Masscan::Importer do
-  let(:masscan_path) { File.expand_path(File.join(__dir__, '..', 'spec', 'fixtures', 'masscan.json')) }
+  let(:fixtures_dir) { File.expand_path(File.join(__dir__, '..', 'spec', 'fixtures')) }
+  let(:masscan_path) { File.join(fixtures_dir, 'masscan.json') }
   let(:output_file)  { Masscan::OutputFile.new(masscan_path) }
 
   before(:all) do
@@ -12,24 +13,12 @@ RSpec.describe Ronin::Masscan::Importer do
   end
 
   after(:all) do
-    Ronin::DB::IPAddress.destroy_all
-    # Ronin::DB::Port.destroy_all
     Ronin::DB::OpenPort.destroy_all
+    Ronin::DB::IPAddress.destroy_all
+    Ronin::DB::Port.destroy_all
   end
 
   describe '.import_file' do
-    let(:expected_values) do
-      [
-        Ronin::DB::IPAddress,
-        Ronin::DB::Port,
-        Ronin::DB::OpenPort,
-        Ronin::DB::IPAddress,
-        Ronin::DB::Port,
-        Ronin::DB::OpenPort,
-        Ronin::DB::IPAddress
-      ]
-    end
-
     it 'must import records from file' do
       yielded_values = []
 
@@ -38,23 +27,17 @@ RSpec.describe Ronin::Masscan::Importer do
       end
 
       expect(yielded_values.size).to eq(7)
-      expect(yielded_values.map(&:class)).to match(expected_values)
+      expect(yielded_values[0]).to be_a(Ronin::DB::IPAddress)
+      expect(yielded_values[1]).to be_a(Ronin::DB::Port)
+      expect(yielded_values[2]).to be_a(Ronin::DB::OpenPort)
+      expect(yielded_values[3]).to be_a(Ronin::DB::IPAddress)
+      expect(yielded_values[4]).to be_a(Ronin::DB::Port)
+      expect(yielded_values[5]).to be_a(Ronin::DB::OpenPort)
+      expect(yielded_values[6]).to be_a(Ronin::DB::IPAddress)
     end
   end
 
   describe '.import' do
-    let(:expected_values) do
-      [
-        Ronin::DB::IPAddress,
-        Ronin::DB::Port,
-        Ronin::DB::OpenPort,
-        Ronin::DB::IPAddress,
-        Ronin::DB::Port,
-        Ronin::DB::OpenPort,
-        Ronin::DB::IPAddress
-      ]
-    end
-
     context 'when an unknown record type is encountered' do
       before do
         allow(output_file).to receive(:each).and_yield("unknown")
@@ -71,50 +54,66 @@ RSpec.describe Ronin::Masscan::Importer do
       it 'must yield imported records' do
         yielded_values = []
 
-        subject.import_file(masscan_path) do |value|
+        subject.import(output_file) do |value|
           yielded_values << value
         end
 
         expect(yielded_values.size).to eq(7)
-        expect(yielded_values.map(&:class)).to match(expected_values)
+        expect(yielded_values[0]).to be_a(Ronin::DB::IPAddress)
+        expect(yielded_values[1]).to be_a(Ronin::DB::Port)
+        expect(yielded_values[2]).to be_a(Ronin::DB::OpenPort)
+        expect(yielded_values[3]).to be_a(Ronin::DB::IPAddress)
+        expect(yielded_values[4]).to be_a(Ronin::DB::Port)
+        expect(yielded_values[5]).to be_a(Ronin::DB::OpenPort)
+        expect(yielded_values[6]).to be_a(Ronin::DB::IPAddress)
       end
     end
 
     context 'when no block is given' do
       it 'must return imported records' do
-        expect(subject.import(output_file).size).to eq(7)
-        expect(subject.import(output_file).map(&:class)).to match(expected_values)
+        imported_records = subject.import(output_file)
+
+        expect(imported_records.size).to eq(7)
+        expect(imported_records[0]).to be_a(Ronin::DB::IPAddress)
+        expect(imported_records[1]).to be_a(Ronin::DB::Port)
+        expect(imported_records[2]).to be_a(Ronin::DB::OpenPort)
+        expect(imported_records[3]).to be_a(Ronin::DB::IPAddress)
+        expect(imported_records[4]).to be_a(Ronin::DB::Port)
+        expect(imported_records[5]).to be_a(Ronin::DB::OpenPort)
+        expect(imported_records[6]).to be_a(Ronin::DB::IPAddress)
       end
     end
   end
 
   describe '.import_status' do
-    let(:status1) { instance_double('Masscan::Status', status: :open, protocol: :icmp, ip: ip_addr) }
-    let(:status2) { instance_double('Masscan::Status', status: :open, protocol: :tcp) }
-    let(:ip_addr) { IPAddr.new('1.1.1.1') }
+    let(:status1) { Masscan::Status.new(status: :open, protocol: :icmp, ip: ip_addr, port: 80, timestamp: Time.now) }
+    let(:status2) { Masscan::Status.new(status: :open, protocol: :tcp,  ip: ip_addr, port: 80, timestamp: Time.now) }
+    let(:ip_addr) { IPAddr.new('1.2.3.4') }
 
     context 'when status is :open' do
       context 'when protocol is :icmp' do
-        it 'must import ip address' do
-          expect(subject).to receive(:import_ip_address).with(ip_addr)
+        let(:expected_ip_address) { Ronin::DB::IPAddress.find_or_create_by(address: '1.2.3.4', version: 4) }
 
-          subject.import_status(status1)
+        it 'must return imported ip address' do
+          expect(subject.import_status(status1)).to eq(expected_ip_address)
         end
       end
 
       context 'when protocol is not :icmp' do
-        it 'must import open port' do
-          expect(subject).to receive(:import_open_port_status).with(status2)
+        let(:port)               { Ronin::DB::Port.find_or_create_by(protocol: :tcp, number: 80) }
+        let(:ip_address)         { Ronin::DB::IPAddress.find_or_create_by(address: '1.2.3.4', version: 4) }
+        let(:expected_open_port) { Ronin::DB::OpenPort.find_or_create_by(ip_address: ip_address, port: port) }
 
-          subject.import_status(status2)
+        it 'must return imported open port' do
+          expect(subject.import_status(status2)).to eq(expected_open_port)
         end
       end
     end
   end
 
   describe '.import_open_port_status' do
-    let(:ip_addr)   { IPAddr.new('1.1.1.1') }
-    let(:status)    { instance_double('Masscan::Status', ip: ip_addr, port: 80, protocol: :tcp, timestamp: Time.now) }
+    let(:ip_addr) { IPAddr.new('1.1.1.1') }
+    let(:status)  { Masscan::Status.new(ip: ip_addr, port: 80, protocol: :tcp, timestamp: Time.now, status: :open) }
 
     context 'when block is given' do
       it 'must yield imported records' do
@@ -125,7 +124,9 @@ RSpec.describe Ronin::Masscan::Importer do
         end
 
         expect(yielded_values.size).to eq(3)
-        expect(yielded_values.map(&:class)).to match([Ronin::DB::IPAddress, Ronin::DB::Port, Ronin::DB::OpenPort])
+        expect(yielded_values[0]).to be_a(Ronin::DB::IPAddress)
+        expect(yielded_values[1]).to be_a(Ronin::DB::Port)
+        expect(yielded_values[2]).to be_a(Ronin::DB::OpenPort)
       end
     end
 
@@ -161,7 +162,7 @@ RSpec.describe Ronin::Masscan::Importer do
     it 'must return the imported IP address' do
       imported_ip_address = subject.import_ip_address(ipv4_address)
 
-      expect(imported_ip_address.class).to be(Ronin::DB::IPAddress)
+      expect(imported_ip_address).to be_a(Ronin::DB::IPAddress)
       expect(imported_ip_address.address).to eq(ipv4_address.to_s)
     end
   end
@@ -169,23 +170,24 @@ RSpec.describe Ronin::Masscan::Importer do
   describe '.import_port' do
     let(:port_number) { 80 }
     let(:protocol)    { :tcp }
-    let(:port)        { instance_double('Ronin::DB::Port') }
-
-    before do
-      Ronin::DB.connect
-      allow(Ronin::DB::Port).to receive(:find_or_create_by).with(protocol: protocol, number: port_number).and_return(port)
-    end
 
     context 'when block if given' do
       it 'must yeild imported port' do
-        expect { |b|
-          subject.import_port(port_number, protocol, &b)
-        }.to yield_with_args(port)
+        yielded_port = nil
+
+        subject.import_port(port_number,protocol) do |port|
+          yielded_port = port
+        end
+
+        expect(yielded_port).to be_kind_of(Ronin::DB::Port)
+        expect(yielded_port.number).to eq(port_number)
       end
     end
 
     it 'must return imported port' do
-      expect(subject.import_port(port_number, protocol)).to eq(port)
+      imported_port = subject.import_port(port_number,protocol)
+      expect(imported_port).to be_kind_of(Ronin::DB::Port)
+      expect(imported_port.number).to eq(port_number)
     end
   end
 end
