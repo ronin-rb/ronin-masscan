@@ -6,7 +6,7 @@ require 'tempfile'
 RSpec.describe Ronin::Masscan::Converter do
   let(:fixtures_path) { File.expand_path(File.join(__dir__, '..', 'spec', 'fixtures')) }
   let(:masscan_path)  { File.join(fixtures_path, 'converter', 'masscan.json') }
-  let(:timestamp)     { 1629960621 }
+  let(:timestamp)     { JSON.parse(File.read(masscan_path))[0].dig("timestamp").to_i }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:expected_json) do
     [
