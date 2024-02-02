@@ -16,7 +16,7 @@ RSpec.describe Ronin::Masscan::Converter do
         reason:    ['syn', 'ack'],
         ttl:       54,
         ip:        '93.184.216.34',
-        timestamp: '2021-08-26 08:50:21 +0200'
+        timestamp: Time.at(1629960621)
       }
     ].to_json
   end
