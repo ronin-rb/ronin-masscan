@@ -6,6 +6,7 @@ require 'tempfile'
 RSpec.describe Ronin::Masscan::Converter do
   let(:fixtures_path) { File.expand_path(File.join(__dir__, '..', 'spec', 'fixtures')) }
   let(:masscan_path)  { File.join(fixtures_path, 'converter', 'masscan.json') }
+  let(:timestamp)     { 1629960621 }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:expected_json) do
     [
@@ -16,7 +17,7 @@ RSpec.describe Ronin::Masscan::Converter do
         reason:    ['syn', 'ack'],
         ttl:       54,
         ip:        '93.184.216.34',
-        timestamp: Time.at(1629960621)
+        timestamp: Time.at(timestamp)
       }
     ].to_json
   end
@@ -29,8 +30,7 @@ RSpec.describe Ronin::Masscan::Converter do
         "banner.app_protocol", "banner.payload"
       ],
       [
-        "status", "open", "tcp", "80", "syn,ack", "54", "93.184.216.34",
-        "2021-08-26 08:50:21 +0200"
+        "status", "open", "tcp", "80", "syn,ack", "54", "93.184.216.34", Time.at(timestamp)
       ]
     ]
   end
