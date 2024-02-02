@@ -8,16 +8,60 @@ RSpec.describe Ronin::Masscan::Converter do
   let(:masscan_path)  { File.join(fixtures_path, 'converter', 'masscan.json') }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:expected_json) do
-    "[{\"status\":\"open\",\"protocol\":\"tcp\",\"port\":80,\"reason\":[\"syn\",\"ack\"],\"ttl\":54,\"ip\":\"93.184.216.34\",\"timestamp\":\"2021-08-26 08:50:21 +0000\"}]"
+    [
+      {
+        status:    :open,
+        protocol:  :tcp,
+        port:      80,
+        reason:    ['syn', 'ack'],
+        ttl:       54,
+        ip:        '93.184.216.34',
+        timestamp: '2021-08-26 08:50:21 +0200'
+      }
+    ].to_json
+  end
+  let(:csv_data) do
+    [
+      [
+        "type", "status.status", "status.protocol", "status.port",
+        "status.reason", "status.ttl", "status.ip", "status.timestamp",
+        "banner.protocol", "banner.port", "banner.ip", "banner.timestamp",
+        "banner.app_protocol", "banner.payload"
+      ],
+      [
+        "status", "open", "tcp", "80", "syn,ack", "54", "93.184.216.34",
+        "2021-08-26 08:50:21 +0200"
+      ]
+    ]
+  end
+  let(:expected_csv) do
+    CSV.generate do |csv|
+      csv_data.each do |row|
+        csv << row
+      end
+    end
   end
 
   describe '.convert_file' do
+    let(:tempfile) { ['dest', '.json'] }
+
     it 'must convert masscan file and wirte it into a file' do
-      Tempfile.create(['dest', '.json']) do |output_file|
+      Tempfile.create(tempfile) do |output_file|
         subject.convert_file(masscan_path, output_file)
         output_file.rewind
 
         expect(output_file.read).to eq(expected_json)
+      end
+    end
+
+    context 'when format is given' do
+      it 'must ignore file extension and convert it to given format' do
+        Tempfile.create(tempfile) do |output_file|
+          subject.convert_file(masscan_path, output_file, format: :csv)
+          output_file.rewind
+
+          expect(output_file.read).to eq(expected_csv)
+        end
       end
     end
   end
@@ -25,10 +69,6 @@ RSpec.describe Ronin::Masscan::Converter do
   describe '.convert' do
     context 'when there is no output' do
       context 'and format is csv' do
-        let(:expected_csv) do
-          "type,status.status,status.protocol,status.port,status.reason,status.ttl,status.ip,status.timestamp,banner.protocol,banner.port,banner.ip,banner.timestamp,banner.app_protocol,banner.payload\nstatus,open,tcp,80,\"syn,ack\",54,93.184.216.34,2021-08-26 08:50:21 +0200\n"
-        end
-
         it 'must convert masscan file into csv' do
           expect(subject.convert(masscan_file, format: :csv)).to eq(expected_csv)
         end
