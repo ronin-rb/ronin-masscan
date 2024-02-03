@@ -68,7 +68,7 @@ module Ronin
         masscan.output_file = tempfile.path
       end
 
-      status  = masscan.run
+      status  = masscan.run_command
 
       if status
         return ::Masscan::OutputFile.new(tempfile.path)
