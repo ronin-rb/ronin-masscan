@@ -7,51 +7,51 @@ RSpec.describe Ronin::Masscan::Converters::CSV do
   let(:masscan_path)  { File.join(fixtures_path, 'converters', 'two_records.json') }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:ip_addr)       { IPAddr.new('93.184.216.34/32') }
-  let(:timestamp)     { 1629960621 }
+  let(:timestamp)     { Time.at(1629960621) }
   let(:header)        { Ronin::Masscan::Converters::CSV::HEADER }
 
   describe '.convert' do
-    let(:expected_status_row) { "status,open,tcp,80,\"syn,ack\",54,93.184.216.34,#{Time.at(timestamp)}" }
-    let(:expected_banner_row) { "banner,,,,,,,,tcp,80,93.184.216.34,#{Time.at(timestamp)},html_title,404 - Not Found" }
+    let(:expected_status_row) { "status,open,tcp,80,\"syn,ack\",54,93.184.216.34,#{timestamp}" }
+    let(:expected_banner_row) { "banner,,,,,,,,tcp,80,93.184.216.34,#{timestamp},html_title,404 - Not Found" }
 
     it 'must convert masscan file to csv and write it into output' do
-      Tempfile.create do |output_file|
-        subject.convert(masscan_file, output_file)
-        output_file.rewind
+      tempfile = Tempfile.new(['ronin-masscan', '.json'])
 
-        result = 3.times.map { output_file.gets(chomp: true) }
+      subject.convert(masscan_file, tempfile)
 
-        expect(result[0]).to eq(header.join(','))
-        expect(result[1]).to eq(expected_status_row)
-        expect(result[2]).to eq(expected_banner_row)
-      end
+      tempfile.rewind
+      csv = tempfile.readlines(chomp: true)
+
+      expect(csv[0]).to eq(header.join(','))
+      expect(csv[1]).to eq(expected_status_row)
+      expect(csv[2]).to eq(expected_banner_row)
     end
   end
 
   describe '.masscan_file_to_csv' do
-    let(:expected_status_row) { "status,open,tcp,80,\"syn,ack\",54,93.184.216.34,#{Time.at(timestamp)}" }
-    let(:expected_banner_row) { "banner,,,,,,,,tcp,80,93.184.216.34,#{Time.at(timestamp)},html_title,404 - Not Found" }
+    let(:expected_status_row) { "status,open,tcp,80,\"syn,ack\",54,93.184.216.34,#{timestamp}" }
+    let(:expected_banner_row) { "banner,,,,,,,,tcp,80,93.184.216.34,#{timestamp},html_title,404 - Not Found" }
 
     it 'must convert masscan file to csv and write it into output' do
-      Tempfile.create do |output_file|
-        subject.masscan_file_to_csv(masscan_file, output_file)
-        output_file.rewind
+      tempfile = Tempfile.new(['ronin-masscan', '.json'])
 
-        result = 3.times.map { output_file.gets(chomp: true) }
+      subject.convert(masscan_file, tempfile)
 
-        expect(result[0]).to eq(header.join(','))
-        expect(result[1]).to eq(expected_status_row)
-        expect(result[2]).to eq(expected_banner_row)
-      end
+      tempfile.rewind
+      csv = tempfile.readlines(chomp: true)
+
+      expect(csv[0]).to eq(header.join(','))
+      expect(csv[1]).to eq(expected_status_row)
+      expect(csv[2]).to eq(expected_banner_row)
     end
   end
 
   describe '.masscan_file_to_rows' do
     let(:expected_status_row) do
-      ['status', :open, :tcp, 80, "syn,ack", 54, ip_addr, Time.at(timestamp)]
+      ['status', :open, :tcp, 80, "syn,ack", 54, ip_addr, timestamp]
     end
     let(:expected_banner_row) do
-      ["banner", nil, nil, nil, nil, nil, nil, nil, :tcp, 80, ip_addr, Time.at(timestamp), :html_title, '404 - Not Found']
+      ["banner", nil, nil, nil, nil, nil, nil, nil, :tcp, 80, ip_addr, timestamp, :html_title, '404 - Not Found']
     end
 
     it 'must yields headers and each row from a masscan file' do
@@ -77,12 +77,12 @@ RSpec.describe Ronin::Masscan::Converters::CSV do
           port: 80,
           reason: [:syn, :ack],
           status: :open,
-          timestamp: Time.at(1629960621),
+          timestamp: timestamp,
           ttl: 54
         )
       }
       let(:expected_row) do
-        ['status', :open, :tcp, 80, "syn,ack", 54, ip_addr, Time.at(timestamp)]
+        ['status', :open, :tcp, 80, "syn,ack", 54, ip_addr, timestamp]
       end
 
       it 'must convert it to row' do
@@ -96,7 +96,7 @@ RSpec.describe Ronin::Masscan::Converters::CSV do
           protocol: :icmp,
           port: 80,
           ip: ip_addr,
-          timestamp: 1629960621,
+          timestamp: timestamp,
           app_protocol: :html_title,
           payload: '404 - Not Found'
         )
@@ -129,12 +129,12 @@ RSpec.describe Ronin::Masscan::Converters::CSV do
         port: 80,
         reason: [:syn, :ack],
         status: :open,
-        timestamp: Time.at(1629960621),
+        timestamp: timestamp,
         ttl: 54
       )
     }
     let(:expected_row) do
-      ['status', :open, :tcp, 80, "syn,ack", 54, ip_addr, Time.at(timestamp)]
+      ['status', :open, :tcp, 80, "syn,ack", 54, ip_addr, timestamp]
     end
 
     it 'must return row for status' do
@@ -148,7 +148,7 @@ RSpec.describe Ronin::Masscan::Converters::CSV do
         protocol: :icmp,
         port: 80,
         ip: ip_addr,
-        timestamp: 1629960621,
+        timestamp: timestamp,
         app_protocol: :html_title,
         payload: '404 - Not Found'
       )
