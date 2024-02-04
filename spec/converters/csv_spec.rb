@@ -4,43 +4,54 @@ require 'tempfile'
 
 RSpec.describe Ronin::Masscan::Converters::CSV do
   let(:fixtures_path) { File.expand_path(File.join(__dir__, '..', 'fixtures')) }
-  let(:masscan_path)  { File.join(fixtures_path, 'converter', 'masscan.json') }
+  let(:masscan_path)  { File.join(fixtures_path, 'masscan_files', 'two_records.json') }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:ip_addr)       { IPAddr.new('93.184.216.34/32') }
   let(:timestamp)     { 1629960621 }
   let(:header)        { Ronin::Masscan::Converters::CSV::HEADER }
 
   describe '.convert' do
-    let(:expected_row) { "status,open,tcp,80,\"syn,ack\",54,93.184.216.34,#{Time.at(timestamp)}" }
+    let(:expected_status_row) { "status,open,tcp,80,\"syn,ack\",54,93.184.216.34,#{Time.at(timestamp)}" }
+    let(:expected_banner_row) { "banner,,,,,,,,tcp,80,93.184.216.34,#{Time.at(timestamp)},html_title,404 - Not Found" }
 
     it 'must convert masscan file to csv and write it into output' do
       Tempfile.create do |output_file|
         subject.convert(masscan_file, output_file)
         output_file.rewind
 
-        expect(output_file.gets.chomp).to eq(header.join(','))
-        expect(output_file.gets.chomp).to eq(expected_row)
+        result = 3.times.map { output_file.gets(chomp: true) }
+
+        expect(result[0]).to eq(header.join(','))
+        expect(result[1]).to eq(expected_status_row)
+        expect(result[2]).to eq(expected_banner_row)
       end
     end
   end
 
   describe '.masscan_file_to_csv' do
-    let(:expected_row) { "status,open,tcp,80,\"syn,ack\",54,93.184.216.34,#{Time.at(timestamp)}" }
+    let(:expected_status_row) { "status,open,tcp,80,\"syn,ack\",54,93.184.216.34,#{Time.at(timestamp)}" }
+    let(:expected_banner_row) { "banner,,,,,,,,tcp,80,93.184.216.34,#{Time.at(timestamp)},html_title,404 - Not Found" }
 
     it 'must convert masscan file to csv and write it into output' do
       Tempfile.create do |output_file|
         subject.masscan_file_to_csv(masscan_file, output_file)
         output_file.rewind
 
-        expect(output_file.gets.chomp).to eq(header.join(','))
-        expect(output_file.gets.chomp).to eq(expected_row)
+        result = 3.times.map { output_file.gets(chomp: true) }
+
+        expect(result[0]).to eq(header.join(','))
+        expect(result[1]).to eq(expected_status_row)
+        expect(result[2]).to eq(expected_banner_row)
       end
     end
   end
 
   describe '.masscan_file_to_rows' do
-    let(:expected_row) do
+    let(:expected_status_row) do
       ['status', :open, :tcp, 80, "syn,ack", 54, ip_addr, Time.at(timestamp)]
+    end
+    let(:expected_banner_row) do
+      ["banner", nil, nil, nil, nil, nil, nil, nil, :tcp, 80, ip_addr, Time.at(timestamp), :html_title, '404 - Not Found']
     end
 
     it 'must yields headers and each row from a masscan file' do
@@ -50,9 +61,10 @@ RSpec.describe Ronin::Masscan::Converters::CSV do
         yielded_values << row
       end
 
-      expect(yielded_values.size).to eq(2)
+      expect(yielded_values.size).to eq(3)
       expect(yielded_values[0]).to eq(Ronin::Masscan::Converters::CSV::HEADER)
-      expect(yielded_values[1]).to eq(expected_row)
+      expect(yielded_values[1]).to eq(expected_status_row)
+      expect(yielded_values[2]).to eq(expected_banner_row)
     end
   end
 
