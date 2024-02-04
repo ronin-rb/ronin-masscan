@@ -4,9 +4,10 @@ require 'tempfile'
 
 RSpec.describe Ronin::Masscan::Converters::JSON do
   let(:fixtures_path) { File.expand_path(File.join(__dir__, '..', 'fixtures')) }
-  let(:masscan_path)  { File.join(fixtures_path, 'converter', 'masscan.json') }
+  let(:masscan_path)  { File.join(fixtures_path, 'converters', 'two_records.json') }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:ip_addr)       { IPAddr.new('93.184.216.34/32') }
+  let(:timestamp)     { Time.at(1629960621) }
   let(:expected_status) do
     {
       status: :open,
@@ -15,43 +16,59 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
       reason: [:syn, :ack],
       ttl: 54,
       ip: ip_addr,
-      timestamp: Time.at(1629960621)
+      timestamp: timestamp
+    }
+  end
+  let(:expected_banner) do
+    {
+      protocol: :tcp,
+      port: 80,
+      ip: ip_addr,
+      timestamp: timestamp,
+      app_protocol: :html_title,
+      payload: '404 - Not Found'
     }
   end
 
   describe '.convert' do
-    it 'must convert masscan file to json and write it into an output' do
-      Tempfile.create do |output_file|
-        subject.masscan_file_to_json(masscan_file, output_file)
-        output_file.rewind
+    let(:expected_result) { JSON.dump([expected_status, expected_banner]) }
 
-        expect(output_file.read).to eq(JSON.dump([expected_status]))
-      end
+    it 'must convert masscan file to json and write it into an output' do
+      tempfile = Tempfile.new(['ronin-masscan', '.json'])
+
+      subject.convert(masscan_file, tempfile)
+
+      tempfile.rewind
+      json = tempfile.read
+      expect(json).to eq(expected_result)
     end
   end
 
   describe '.masscan_file_to_json' do
-    it 'must convert masscan file to json and write it into an output' do
-      Tempfile.create do |output_file|
-        subject.masscan_file_to_json(masscan_file, output_file)
-        output_file.rewind
+    let(:expected_result) { JSON.dump([expected_status, expected_banner]) }
 
-        expect(output_file.read).to eq(JSON.dump([expected_status]))
-      end
+    it 'must convert masscan file to json and write it into an output' do
+      tempfile = Tempfile.new(['ronin-masscan', '.json'])
+
+      subject.convert(masscan_file, tempfile)
+
+      tempfile.rewind
+      json = tempfile.read
+      expect(json).to eq(expected_result)
     end
   end
 
   describe '.masscan_file_as_json' do
+    let(:expected_result) { [expected_status, expected_banner] }
+
     it 'must convert masscan file to json representation' do
-      expect(subject.masscan_file_as_json(masscan_file)).to eq([expected_status])
+      expect(subject.masscan_file_as_json(masscan_file)).to eq(expected_result)
     end
   end
 
   describe '.record_as_json' do
-    let(:ip_addr) { IPAddr.new('1.1.1.1') }
-
     context 'for Masscan::Status' do
-      let(:record) {
+      let(:record) do
         Masscan::Status.new(
           ip: ip_addr,
           protocol: :tcp,
@@ -61,7 +78,7 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
           timestamp: Time.at(1629960621),
           ttl: 54
         )
-      }
+      end
 
       it 'must return status as json' do
         expect(subject.record_as_json(record)).to eq(expected_status)
@@ -69,25 +86,15 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
     end
 
     context 'for Masscan::Banner' do
-      let(:record) {
+      let(:record) do
         Masscan::Banner.new(
-          protocol: :icmp,
+          protocol: :tcp,
           port: 80,
           ip: ip_addr,
-          timestamp: 1629960621,
+          timestamp: timestamp,
           app_protocol: :html_title,
           payload: '404 - Not Found'
         )
-      }
-      let(:expected_banner) do
-        {
-          protocol: :icmp,
-          port: 80,
-          ip: ip_addr,
-          timestamp: 1629960621,
-          app_protocol: :html_title,
-          payload: '404 - Not Found'
-        }
       end
 
       it 'must return banner as json' do
@@ -107,7 +114,7 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
   end
 
   describe '.status_as_json' do
-    let(:status) {
+    let(:status) do
       Masscan::Status.new(
         ip: ip_addr,
         protocol: :tcp,
@@ -117,7 +124,7 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
         timestamp: Time.at(1629960621),
         ttl: 54
       )
-    }
+    end
 
     it 'must convert Masscan::Status to a Hash' do
       expect(subject.status_as_json(status)).to eq(expected_status)
@@ -125,26 +132,15 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
   end
 
   describe '.banner_as_json' do
-    let(:ip_addr) { IPAddr.new('1.1.1.1') }
-    let(:banner)  {
+    let(:banner) do
       Masscan::Banner.new(
-        protocol: :icmp,
+        protocol: :tcp,
         port: 80,
         ip: ip_addr,
-        timestamp: 1629960621,
+        timestamp: timestamp,
         app_protocol: :html_title,
         payload: '404 - Not Found'
       )
-    }
-    let(:expected_banner) do
-      {
-        protocol: :icmp,
-        port: 80,
-        ip: ip_addr,
-        timestamp: 1629960621,
-        app_protocol: :html_title,
-        payload: '404 - Not Found'
-      }
     end
 
     it 'must convert Masscan::Banner to a Hash' do
