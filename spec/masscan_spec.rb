@@ -14,4 +14,38 @@ describe Ronin::Masscan do
       expect(output_file.path).to eq(path)
     end
   end
+
+  describe '.scan' do
+    let(:ips) { '192.168.1.1' }
+
+    context 'when ip adresses are not given' do
+      it 'must raise an ArgumentError' do
+        expect {
+          subject.scan
+        }.to raise_error(ArgumentError, 'must specify at least one IP address')
+      end
+    end
+
+    context 'when masscan command was successful' do
+      it 'must return masscan data' do
+        expect(subject.scan(ips, ports: 80)).to be_a(Masscan::OutputFile)
+      end
+    end
+
+    context 'when masscan command fails' do
+      it 'must return masscan data' do
+        expect(subject.scan(ips)).to be(false)
+      end
+    end
+
+    context 'when masscan command is not installed' do
+      before do
+        allow(Kernel).to receive(:system).with({}, 'masscan', '--output-filename', anything ,ips).and_return(nil)
+      end
+
+      it 'must return nil' do
+        expect(subject.scan(ips)).to be(nil)
+      end
+    end
+  end
 end
