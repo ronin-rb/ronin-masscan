@@ -63,7 +63,7 @@ module Ronin
 
       unless masscan.output_file
         FileUtils.mkdir_p(CACHE_DIR)
-        tempfile = Tempfile.new('masscan', CACHE_DIR)
+        tempfile = Tempfile.new(['masscan', '.json'], CACHE_DIR)
 
         masscan.output_file = tempfile.path
       end
