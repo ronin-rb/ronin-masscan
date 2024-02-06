@@ -4,7 +4,7 @@ require 'tempfile'
 
 RSpec.describe Ronin::Masscan::Converters::CSV do
   let(:fixtures_path) { File.expand_path(File.join(__dir__, '..', 'fixtures')) }
-  let(:masscan_path)  { File.join(fixtures_path, 'converters', 'two_records.json') }
+  let(:masscan_path)  { File.join(fixtures_path, 'converters', 'input.json') }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:ip_addr)       { IPAddr.new('93.184.216.34/32') }
   let(:timestamp)     { Time.at(1629960621) }
