@@ -27,19 +27,14 @@ describe Ronin::Masscan do
     end
 
     context 'when masscan command was successful' do
-      let(:masscan_command) { Masscan::Command.new(ips: ips, output_file: tempfile.path) }
-      let(:tempfile)        { Tempfile.create(['masscan', '.json']) }
+      let(:expected_output_filename) { %r{#{Ronin::Masscan::CACHE_DIR}\/masscan[^.]+\.json} }
 
       before do
-        allow(Masscan::Command).to receive(:new).and_return(masscan_command)
-        allow(Kernel).to receive(:system).with({}, 'masscan', '--output-filename', anything, ips).and_return(true)
+        allow(Kernel).to receive(:system).with({}, 'masscan', '-p', '80', '--output-filename', match(expected_output_filename), ips).and_return(true)
       end
 
       it 'must return a Masscan::OutputFile' do
-        result = subject.scan(ips, ports: 80)
-
-        expect(result).to be_a(Masscan::OutputFile)
-        expect(result.path).to eq(masscan_command.output_file)
+        expect(subject.scan(ips, ports: 80)).to be_a(Masscan::OutputFile)
       end
     end
 
