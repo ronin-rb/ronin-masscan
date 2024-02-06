@@ -27,20 +27,35 @@ describe Ronin::Masscan do
     end
 
     context 'when masscan command was successful' do
-      it 'must return masscan data' do
-        expect(subject.scan(ips, ports: 80)).to be_a(Masscan::OutputFile)
+      let(:masscan_command) { Masscan::Command.new(ips: ips, output_file: tempfile.path) }
+      let(:tempfile)        { Tempfile.create(['masscan', '.json']) }
+
+      before do
+        allow(Masscan::Command).to receive(:new).and_return(masscan_command)
+        allow(Kernel).to receive(:system).with({}, 'masscan', '--output-filename', anything, ips).and_return(true)
+      end
+
+      it 'must return a Masscan::OutputFile' do
+        result = subject.scan(ips, ports: 80)
+
+        expect(result).to be_a(Masscan::OutputFile)
+        expect(result.path).to eq(masscan_command.output_file)
       end
     end
 
     context 'when masscan command fails' do
-      it 'must return masscan data' do
+      before do
+        allow(Kernel).to receive(:system).with({}, 'masscan', '--output-filename', anything, ips).and_return(false)
+      end
+
+      it 'must return false' do
         expect(subject.scan(ips)).to be(false)
       end
     end
 
     context 'when masscan command is not installed' do
       before do
-        allow(Kernel).to receive(:system).with({}, 'masscan', '--output-filename', anything ,ips).and_return(nil)
+        allow(Kernel).to receive(:system).with({}, 'masscan', '--output-filename', anything, ips).and_return(nil)
       end
 
       it 'must return nil' do
