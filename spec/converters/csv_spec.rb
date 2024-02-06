@@ -35,7 +35,7 @@ RSpec.describe Ronin::Masscan::Converters::CSV do
     it 'must convert masscan file to csv and write it into output' do
       tempfile = Tempfile.new(['ronin-masscan', '.json'])
 
-      subject.convert(masscan_file, tempfile)
+      subject.masscan_file_to_csv(masscan_file, tempfile)
 
       tempfile.rewind
       csv = tempfile.readlines(chomp: true)
