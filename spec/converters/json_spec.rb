@@ -6,27 +6,38 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
   let(:fixtures_path) { File.expand_path(File.join(__dir__, '..', 'fixtures')) }
   let(:masscan_path)  { File.join(fixtures_path, 'converters', 'input.json') }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
-  let(:ip_addr)       { IPAddr.new('93.184.216.34/32') }
+
+  let(:ip)            { '93.184.216.34' }
+  let(:ip_addr)       { IPAddr.new(ip) }
+  let(:protocol)      { :tcp }
+  let(:port)          { 80 }
+  let(:ttl)           { 54 }
   let(:timestamp)     { Time.at(1629960621) }
+
+  let(:status_status) { :open }
+  let(:status_reason) { [:syn, :ack] }
   let(:expected_status) do
     {
-      status: :open,
-      protocol: :tcp,
-      port: 80,
-      reason: [:syn, :ack],
-      ttl: 54,
-      ip: ip_addr,
+      status:    status_status,
+      protocol:  protocol,
+      port:      port,
+      reason:    status_reason,
+      ttl:       ttl,
+      ip:        ip_addr,
       timestamp: timestamp
     }
   end
+
+  let(:banner_app_protocol) { :html_title }
+  let(:banner_payload)      { '404 - Not Found' }
   let(:expected_banner) do
     {
-      protocol: :tcp,
-      port: 80,
-      ip: ip_addr,
-      timestamp: timestamp,
-      app_protocol: :html_title,
-      payload: '404 - Not Found'
+      protocol:     protocol,
+      port:         port,
+      ip:           ip_addr,
+      timestamp:    timestamp,
+      app_protocol: banner_app_protocol,
+      payload:      banner_payload
     }
   end
 
@@ -70,13 +81,13 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
     context 'for Masscan::Status' do
       let(:record) do
         Masscan::Status.new(
-          ip: ip_addr,
-          protocol: :tcp,
-          port: 80,
-          reason: [:syn, :ack],
-          status: :open,
-          timestamp: Time.at(1629960621),
-          ttl: 54
+          ip:        ip_addr,
+          protocol:  protocol,
+          port:      port,
+          reason:    status_reason,
+          status:    status_status,
+          timestamp: timestamp,
+          ttl:       ttl
         )
       end
 
@@ -88,12 +99,12 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
     context 'for Masscan::Banner' do
       let(:record) do
         Masscan::Banner.new(
-          protocol: :tcp,
-          port: 80,
-          ip: ip_addr,
-          timestamp: timestamp,
-          app_protocol: :html_title,
-          payload: '404 - Not Found'
+          protocol:     protocol,
+          port:         port,
+          ip:           ip_addr,
+          timestamp:    timestamp,
+          app_protocol: banner_app_protocol,
+          payload:      banner_payload
         )
       end
 
@@ -116,13 +127,13 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
   describe '.status_as_json' do
     let(:status) do
       Masscan::Status.new(
-        ip: ip_addr,
-        protocol: :tcp,
-        port: 80,
-        reason: [:syn, :ack],
-        status: :open,
-        timestamp: Time.at(1629960621),
-        ttl: 54
+        ip:        ip_addr,
+        protocol:  protocol,
+        port:      port,
+        reason:    status_reason,
+        status:    status_status,
+        timestamp: timestamp,
+        ttl:       ttl
       )
     end
 
@@ -134,12 +145,12 @@ RSpec.describe Ronin::Masscan::Converters::JSON do
   describe '.banner_as_json' do
     let(:banner) do
       Masscan::Banner.new(
-        protocol: :tcp,
-        port: 80,
-        ip: ip_addr,
-        timestamp: timestamp,
-        app_protocol: :html_title,
-        payload: '404 - Not Found'
+        protocol:     protocol,
+        port:         port,
+        ip:           ip_addr,
+        timestamp:    timestamp,
+        app_protocol: banner_app_protocol,
+        payload:      banner_payload
       )
     end
 
