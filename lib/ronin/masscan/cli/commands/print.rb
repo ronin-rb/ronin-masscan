@@ -40,6 +40,10 @@ module Ronin
         #         --ip-range CIDR              Filter the targets by IP range
         #         -p, --ports {PORT | PORT1-PORT2},...
         #                                      Filter targets by port number
+        #         --with-app-protocol APP_PROTOCOL[,...]
+        #                                      Filters targets with the app protocol
+        #         --with-payload STRING        Filters targets containing the payload
+        #         --with-payload-regex /REGEX/ Filters targets with the matching payload
         #     -h, --help                       Print help information
         #
         # ## Arguments

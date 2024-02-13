@@ -35,6 +35,15 @@ IP range, domain, or port.
   The port list is a comma separated list of port numbers (`443`) or port
   ranges (`8000-9000`).
 
+`--with-app-protocol` *APP_PROTOCOL*,...
+: Filters targets by the app protocol names.
+
+`--with-payload` *STRING*
+: Filters targets by the payload substring.
+
+`--with-payload-regex` `/`*REGEX*`/`
+: Filters targets how's payload string matches the regular expression.
+
 `-h`, `--help`
 : Print help information
 
