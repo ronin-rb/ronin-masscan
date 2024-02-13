@@ -75,10 +75,10 @@ module Ronin
                               exit(1)
                             end
 
-              targets = filter_targets(output_file)
+              records = filter_targets(output_file)
 
-              targets.group_by(&:ip).each do |ip,open_ports|
-                print_open_ports(ip,open_ports)
+              records.group_by(&:ip).each do |ip,records|
+                print_records_for(ip,records)
               end
             end
           end
@@ -88,18 +88,18 @@ module Ronin
           #
           # @param [String] ip
           #
-          # @param [Array<::Masscan::Status, ::Masscan::Banner>] open_ports
+          # @param [Array<::Masscan::Status, ::Masscan::Banner>] records
           #
-          def print_open_ports(ip,open_ports)
+          def print_records_for(ip,records)
             puts "[ #{ip} ]"
             puts
 
-            open_ports.each do |open_port|
-              case open_port
+            records.each do |record|
+              case record
               when ::Masscan::Status
-                puts "  #{open_port.port}/#{open_port.protocol}\t#{open_port.status}"
+                puts "  #{record.port}/#{record.protocol}\t#{record.status}"
               when ::Masscan::Banner
-                puts "    #{open_port.app_protocol}\t#{open_port.banner}"
+                puts "    #{record.app_protocol}\t#{record.banner}"
               end
             end
           end
