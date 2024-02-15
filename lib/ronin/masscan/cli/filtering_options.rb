@@ -143,165 +143,165 @@ module Ronin
         end
 
         #
-        # Filters the masscan targets.
+        # Filters the masscan records.
         #
         # @param [::Masscan::OutputFile] output_file
         #   The parsed nmap xml data to filter.
         #
         # @return [Enumerator::Lazy]
-        #   A lazy enumerator of the filtered targets.
+        #   A lazy enumerator of the filtered records.
         #
-        def filter_targets(output_file)
-          targets = output_file.each.lazy
+        def filter_records(output_file)
+          records = output_file.each.lazy
 
           unless @protocols.empty?
-            targets = filter_targets_by_protocol(targets)
+            records = filter_records_by_protocol(records)
           end
 
           unless @ips.empty?
-            targets = filter_targets_by_ip(targets)
+            records = filter_records_by_ip(records)
           end
 
           unless @ip_ranges.empty?
-            targets = filter_targets_by_ip_range(targets)
+            records = filter_records_by_ip_range(records)
           end
 
           unless @ports.empty?
-            targets = filter_targets_by_port(targets)
+            records = filter_records_by_port(records)
           end
 
           unless @with_app_protocols.empty?
-            targets = filter_targets_by_app_protocol(targets)
+            records = filter_records_by_app_protocol(records)
           end
 
           unless @with_payloads.empty?
-            targets = filter_targets_by_payload(targets)
+            records = filter_records_by_payload(records)
           end
 
-          return targets
+          return records
         end
 
         #
-        # Filter `Masscan::Status` targets.
+        # Filter `Masscan::Status` records.
         #
-        # @param [Enumerator::Lazy] targets
-        #   The targets to filter.
-        #
-        # @return [Enumerator::Lazy]
-        #   The filtered targets.
-        #
-        def filter_status_targets(targets)
-          targets.filter do |target|
-            target.kind_of?(::Masscan::Status)
-          end
-        end
-
-        #
-        # Filter `Masscan::Banner` targets.
-        #
-        # @param [Enumerator::Lazy] targets
-        #   The targets to filter.
+        # @param [Enumerator::Lazy] records
+        #   The records to filter.
         #
         # @return [Enumerator::Lazy]
-        #   The filtered targets.
+        #   The filtered records.
         #
-        def filter_banner_targets(targets)
-          targets.filter do |target|
-            target.kind_of?(::Masscan::Banner)
+        def filter_status_records(records)
+          records.filter do |record|
+            record.kind_of?(::Masscan::Status)
           end
         end
 
         #
-        # Filters the targets by protocol
+        # Filter `Masscan::Banner` records.
         #
-        # @param [Enumerator::Lazy] targets
-        #   The targets to filter.
+        # @param [Enumerator::Lazy] records
+        #   The records to filter.
         #
         # @return [Enumerator::Lazy]
-        #   A lazy enumerator of the filtered targets.
+        #   The filtered records.
         #
-        def filter_targets_by_protocol(targets)
-          targets.filter do |target|
-            @protocols.include?(target.protocol)
+        def filter_banner_records(records)
+          records.filter do |record|
+            record.kind_of?(::Masscan::Banner)
           end
         end
 
         #
-        # Filters the targets by IP address.
+        # Filters the records by protocol
         #
-        # @param [Enumerator::Lazy] targets
-        #   The targets to filter.
+        # @param [Enumerator::Lazy] records
+        #   The records to filter.
         #
         # @return [Enumerator::Lazy]
-        #   A lazy enumerator of the filtered targets.
+        #   A lazy enumerator of the filtered records.
         #
-        def filter_targets_by_ip(targets)
-          targets.filter do |target|
-            @ips.include?(target.ip)
+        def filter_records_by_protocol(records)
+          records.filter do |record|
+            @protocols.include?(record.protocol)
           end
         end
 
         #
-        # Filters the targets by an IP rangeo.
+        # Filters the records by IP address.
         #
-        # @param [Enumerator::Lazy] targets
-        #   The targets to filter.
+        # @param [Enumerator::Lazy] records
+        #   The records to filter.
         #
         # @return [Enumerator::Lazy]
-        #   A lazy enumerator of the filtered targets.
+        #   A lazy enumerator of the filtered records.
         #
-        def filter_targets_by_ip_range(targets)
-          targets.filter do |target|
+        def filter_records_by_ip(records)
+          records.filter do |record|
+            @ips.include?(record.ip)
+          end
+        end
+
+        #
+        # Filters the records by an IP rangeo.
+        #
+        # @param [Enumerator::Lazy] records
+        #   The records to filter.
+        #
+        # @return [Enumerator::Lazy]
+        #   A lazy enumerator of the filtered records.
+        #
+        def filter_records_by_ip_range(records)
+          records.filter do |record|
             @ip_ranges.any? do |ip_range|
-              ip_range.include?(target.ip)
+              ip_range.include?(record.ip)
             end
           end
         end
 
         #
-        # Filters the targets by port number.
+        # Filters the records by port number.
         #
-        # @param [Enumerator::Lazy] targets
-        #   The targets to filter.
+        # @param [Enumerator::Lazy] records
+        #   The records to filter.
         #
         # @return [Enumerator::Lazy]
-        #   A lazy enumerator of the filtered targets.
+        #   A lazy enumerator of the filtered records.
         #
-        def filter_targets_by_port(targets)
-          targets.filter do |target|
-            @ports.include?(target.port)
+        def filter_records_by_port(records)
+          records.filter do |record|
+            @ports.include?(record.port)
           end
         end
 
         #
-        # Filters the targets by app-protocol IDs.
+        # Filters the records by app-protocol IDs.
         #
-        # @param [Enumerator::Lazy] targets
-        #   The targets to filter.
+        # @param [Enumerator::Lazy] records
+        #   The records to filter.
         #
         # @return [Enumerator::Lazy]
-        #   A lazy enumerator of the filtered targets.
+        #   A lazy enumerator of the filtered records.
         #
-        def filter_targets_by_app_protocol(targets)
-          targets.filter do |record|
+        def filter_records_by_app_protocol(records)
+          records.filter do |record|
             record.kind_of?(::Masscan::Banner) &&
               @with_app_protocols.include?(record.app_protocol)
           end
         end
 
         #
-        # Filters the targets by payload contents.
+        # Filters the records by payload contents.
         #
-        # @param [Enumerator::Lazy] targets
-        #   The targets to filter.
+        # @param [Enumerator::Lazy] records
+        #   The records to filter.
         #
         # @return [Enumerator::Lazy]
-        #   A lazy enumerator of the filtered targets.
+        #   A lazy enumerator of the filtered records.
         #
-        def filter_targets_by_payload(targets)
+        def filter_records_by_payload(records)
           regexp = Regexp.union(@with_payloads.to_a)
 
-          targets.filter do |record|
+          records.filter do |record|
             record.kind_of?(::Masscan::Banner) &&
               record.payload =~ regexp
           end

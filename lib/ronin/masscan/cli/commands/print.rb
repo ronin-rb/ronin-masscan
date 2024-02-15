@@ -79,7 +79,7 @@ module Ronin
                               exit(1)
                             end
 
-              records = filter_targets(output_file)
+              records = filter_records(output_file)
 
               records.group_by(&:ip).each do |ip,records|
                 print_records_for(ip,records)
