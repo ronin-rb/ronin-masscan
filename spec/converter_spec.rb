@@ -5,7 +5,7 @@ require 'tempfile'
 
 RSpec.describe Ronin::Masscan::Converter do
   let(:fixtures_path) { File.expand_path(File.join(__dir__, '..', 'spec', 'fixtures')) }
-  let(:masscan_path)  { File.join(fixtures_path, 'converter', 'masscan.json') }
+  let(:masscan_path)  { File.join(fixtures_path, 'converters', 'input.json') }
   let(:timestamp)     { JSON.parse(File.read(masscan_path))[0]["timestamp"].to_i }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
   let(:expected_json) do
@@ -18,6 +18,14 @@ RSpec.describe Ronin::Masscan::Converter do
         ttl:       54,
         ip:        '93.184.216.34',
         timestamp: Time.at(timestamp)
+      },
+      {
+        protocol:     :tcp,
+        port:         80,
+        ip:           '93.184.216.34',
+        timestamp:    Time.at(timestamp),
+        app_protocol: 'html_title',
+        payload:      '404 - Not Found'
       }
     ].to_json
   end
@@ -31,6 +39,9 @@ RSpec.describe Ronin::Masscan::Converter do
       ],
       [
         "status", "open", "tcp", "80", "syn,ack", "54", "93.184.216.34", Time.at(timestamp)
+      ],
+      [
+        "banner", nil , nil, nil, nil, nil, nil, nil, "tcp", "80", "93.184.216.34",Time.at(timestamp), "html_title", "404 - Not Found"
       ]
     ]
   end
