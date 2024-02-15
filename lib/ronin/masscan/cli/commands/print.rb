@@ -81,8 +81,8 @@ module Ronin
 
               records = filter_records(output_file)
 
-              records.group_by(&:ip).each do |ip,records|
-                print_records_for(ip,records)
+              records.group_by(&:ip).each do |ip,ip_records|
+                print_records_for_ip(ip,ip_records)
               end
             end
           end
@@ -94,16 +94,32 @@ module Ronin
           #
           # @param [Array<::Masscan::Status, ::Masscan::Banner>] records
           #
-          def print_records_for(ip,records)
+          def print_records_for_ip(ip,records)
             puts "[ #{ip} ]"
             puts
 
-            records.each do |record|
-              case record
-              when ::Masscan::Status
-                puts "  #{record.port}/#{record.protocol}\t#{record.status}"
-              when ::Masscan::Banner
-                puts "    #{record.app_protocol}\t#{record.banner}"
+            records.group_by(&:port).each do |port,port_records|
+              status  = port_records.first
+              banners = port_records[1..]
+
+              puts "  #{status.port}/#{status.protocol}\t#{status.status}"
+
+              unless banners.empty?
+                banners.each do |banner|
+                  payload = banner.payload
+
+                  if payload.include?("\n") # multiline?
+                    puts "    #{banner.app_protocol}"
+
+                    payload.chomp.each_line(chomp: true) do |line|
+                      puts "      #{line}"
+                    end
+                  else
+                    puts "    #{banner.app_protocol}\t#{payload}"
+                  end
+                end
+
+                puts
               end
             end
           end
