@@ -154,12 +154,6 @@ module Ronin
         def filter_targets(output_file)
           targets = output_file.each.lazy
 
-          targets = if (!@with_app_protocols.empty? || !@with_payloads.empty?)
-                      filter_banner_targets(targets)
-                    else
-                      filter_status_targets(targets)
-                    end
-
           unless @protocols.empty?
             targets = filter_targets_by_protocol(targets)
           end
@@ -289,8 +283,9 @@ module Ronin
         #   A lazy enumerator of the filtered targets.
         #
         def filter_targets_by_app_protocol(targets)
-          targets.filter do |banner|
-            @with_app_protocols.include?(banner.app_protocol)
+          targets.filter do |record|
+            record.kind_of?(::Masscan::Banner) &&
+              @with_app_protocols.include?(record.app_protocol)
           end
         end
 
@@ -306,8 +301,9 @@ module Ronin
         def filter_targets_by_payload(targets)
           regexp = Regexp.union(@with_payloads.to_a)
 
-          targets.filter do |banner|
-            banner.payload =~ regexp
+          targets.filter do |record|
+            record.kind_of?(::Masscan::Banner) &&
+              record.payload =~ regexp
           end
         end
       end
