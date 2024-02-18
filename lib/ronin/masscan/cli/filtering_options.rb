@@ -55,7 +55,7 @@ module Ronin
                                       type:  String,
                                       usage: 'CIDR'
                                     },
-                                    desc: 'Filter the targets by IP range' do |ip_range|
+                                    desc: 'Filters the targets by IP range' do |ip_range|
                                       @ip_ranges << IPAddr.new(ip_range)
                                     end
 

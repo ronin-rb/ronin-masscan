@@ -28,7 +28,7 @@ IP range, domain, or port.
 : Filters the targets by a specific IP address.
 
 `--ip-range` *CIDR*
-: Filter the targets by a CIDR IP range (ex: `192.168.1.0/24`).
+: Filters the targets by a CIDR IP range (ex: `192.168.1.0/24`).
 
 `-p`, `--ports` {*PORT* | *PORT1-PORT2*},...
 : Filter `IP:PORT` or `HOST:PORT` pairs who's ports are in the gvien port list.

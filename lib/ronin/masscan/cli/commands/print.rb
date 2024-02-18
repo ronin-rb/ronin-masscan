@@ -37,7 +37,7 @@ module Ronin
         #
         #     -P, --protocol tcp|udp           Filters the targets by protocol
         #         --ip IP                      Filters the targets by IP
-        #         --ip-range CIDR              Filter the targets by IP range
+        #         --ip-range CIDR              Filters the targets by IP range
         #         -p, --ports {PORT | PORT1-PORT2},...
         #                                      Filter targets by port number
         #         --with-app-protocol APP_PROTOCOL[,...]
