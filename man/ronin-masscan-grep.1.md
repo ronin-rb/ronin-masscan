@@ -10,7 +10,14 @@ ronin-masscan-grep - Greps the scanned services from masscan scan file(s)
 
 ## DESCRIPTION
 
+Searches through the scanned services in one or more masscan scan files for the
+given pattern. This command specifically searches the "banner" records in
+masscan output files generated using the `masscan` `--banners` option.
+
 ## ARGUMENTS
+
+*PATTERN*
+: The pattern to search for.
 
 *MASSCAN_FILE*
 : The masscan scan file to import.
