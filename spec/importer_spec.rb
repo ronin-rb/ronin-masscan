@@ -4,7 +4,7 @@ require 'masscan/output_file'
 require 'ronin/db'
 
 RSpec.describe Ronin::Masscan::Importer do
-  let(:fixtures_dir) { File.expand_path(File.join(__dir__, '..', 'spec', 'fixtures')) }
+  let(:fixtures_dir) { File.join(__dir__,'fixtures') }
   let(:masscan_path) { File.join(fixtures_dir, 'masscan.json') }
   let(:output_file)  { Masscan::OutputFile.new(masscan_path) }
 
