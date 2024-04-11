@@ -98,7 +98,9 @@ module Ronin
               puts "[ #{ip} ]"
               puts
 
-              records_for_ip.group_by(&:port).each_value do |records_for_port|
+              records_for_ip.group_by { |record|
+                [record.port, record.protocol]
+              }.each_value do |records_for_port|
                 status  = records_for_port.first
                 banners = records_for_port[1..]
 
