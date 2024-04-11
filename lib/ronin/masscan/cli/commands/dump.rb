@@ -130,7 +130,7 @@ module Ronin
                               exit(1)
                             end
 
-              filter_targets(output_file).each do |target|
+              filter_records(output_file).each do |target|
                 print_target(target)
               end
             end
