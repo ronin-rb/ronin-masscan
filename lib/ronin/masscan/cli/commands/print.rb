@@ -20,7 +20,9 @@
 
 require 'ronin/masscan/cli/command'
 require 'ronin/masscan/cli/filtering_options'
+
 require 'masscan/output_file'
+require 'command_kit/printing/indent'
 
 module Ronin
   module Masscan
@@ -54,6 +56,7 @@ module Ronin
 
           usage '[options] MASSCAN_FILE [...]'
 
+          include CommandKit::Printing::Indent
           include FilteringOptions
 
           argument :masscan_file, required: true,
@@ -81,46 +84,72 @@ module Ronin
 
               records = filter_records(output_file)
 
-              records.group_by(&:ip).each do |ip,ip_records|
-                print_records_for_ip(ip,ip_records)
-              end
+              print_records(records)
             end
           end
 
           #
           # Prints the open ports for the IP.
           #
-          # @param [String] ip
-          #
           # @param [Array<::Masscan::Status, ::Masscan::Banner>] records
           #
-          def print_records_for_ip(ip,records)
-            puts "[ #{ip} ]"
-            puts
+          def print_records(records)
+            records.group_by(&:ip).each do |ip,records_for_ip|
+              puts "[ #{ip} ]"
+              puts
 
-            records.group_by(&:port).each_value do |port_records|
-              status  = port_records.first
-              banners = port_records[1..]
+              records_for_ip.group_by(&:port).each_value do |records_for_port|
+                status  = records_for_port.first
+                banners = records_for_port[1..]
 
-              puts "  #{status.port}/#{status.protocol}\t#{status.status}"
+                indent do
+                  print_status_record(status)
 
-              unless banners.empty?
-                banners.each do |banner|
-                  payload = banner.payload
-
-                  if payload.include?("\n") # multiline?
-                    puts "    #{banner.app_protocol}"
-
-                    payload.chomp.each_line(chomp: true) do |line|
-                      puts "      #{line}"
+                  unless banners.empty?
+                    indent do
+                      banners.each do |banner|
+                        print_banner_record(banner)
+                      end
                     end
-                  else
-                    puts "    #{banner.app_protocol}\t#{payload}"
+
+                    puts
                   end
                 end
-
-                puts
               end
+            end
+          end
+
+          #
+          # Prints a masscan status record.
+          #
+          # @param [::Masscan::Status] status
+          #   The status record that indicates whether a port is open or not.
+          #
+          def print_status_record(status)
+            puts "#{status.port}/#{status.protocol}\t#{status.status}"
+          end
+
+          #
+          # Prints a masscan banner record.
+          #
+          # @param [::Masscan::Banner] banner
+          #   The banner record that contains additional information about the
+          #   port's service.
+          #
+          def print_banner_record(banner)
+            payload      = banner.payload
+            app_protocol = banner.app_protocol
+
+            if payload.include?("\n") # multiline?
+              puts app_protocol
+
+              indent do
+                payload.chomp.each_line(chomp: true) do |line|
+                  puts line
+                end
+              end
+            else
+              puts "#{app_protocol}\t#{payload}"
             end
           end
 
