@@ -8,9 +8,10 @@ describe Ronin::Masscan::CLI::Commands::Grep do
   include_examples "man_page"
 
   let(:stdout) { StringIO.new }
+  let(:stderr) { StringIO.new }
 
   before  { allow(stdout).to receive(:tty?).and_return(true) }
-  subject { described_class.new(stdout: stdout) }
+  subject { described_class.new(stdout: stdout, stderr: stderr) }
 
   let(:fixtures_dir) { File.expand_path(File.join(__dir__,'..','..','fixtures')) }
   let(:masscan_path) { File.join(fixtures_dir, 'masscan.json') }
@@ -40,6 +41,35 @@ describe Ronin::Masscan::CLI::Commands::Grep do
 
         OUTPUT
       )
+    end
+
+    context "when the given file does not exist" do
+      let(:bad_masscan_path) { 'does/not/exist.json' }
+
+      it "must print an error and continue" do
+        subject.run(pattern,bad_masscan_path,masscan_path)
+
+        expect(stderr.string).to eq(
+          "grep: no such file or directory: #{bad_masscan_path}#{$/}"
+        )
+
+        expect(stdout.string).to eq(
+          <<~OUTPUT
+            [ 93.184.216.34 ]
+
+              80/tcp
+                #{highlighted_pattern}_title	404 - Not Found
+                http
+                  HTTP/1.0 404 Not Found
+                  Content-Type: text/#{highlighted_pattern}
+                  Date: Thu, 26 Aug 2021 06:50:24 GMT
+                  Server: ECS (sec/974D)
+                  Content-Length: 345
+                  Connection: close
+
+          OUTPUT
+        )
+      end
     end
   end
 

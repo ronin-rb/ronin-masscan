@@ -85,6 +85,11 @@ module Ronin
           #
           def run(pattern,*masscan_files)
             masscan_files.each do |masscan_file|
+              unless File.file?(masscan_file)
+                print_error "no such file or directory: #{masscan_file}"
+                next
+              end
+
               output_file = begin
                               ::Masscan::OutputFile.new(masscan_file)
                             rescue ArgumentError => error
