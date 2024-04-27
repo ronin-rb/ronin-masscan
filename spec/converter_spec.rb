@@ -66,9 +66,20 @@ RSpec.describe Ronin::Masscan::Converter do
     end
 
     context 'when format is given' do
-      it 'must ignore file extension and convert it to given format' do
+      it 'must ignore file extension and convert it to the given format' do
         Tempfile.create(tempfile) do |output_file|
           subject.convert_file(masscan_path, output_file, format: :csv)
+          output_file.rewind
+
+          expect(output_file.read).to eq(expected_csv)
+        end
+      end
+    end
+
+    context 'when input_format and format are given' do
+      it 'must set input file format explicitly and convert it to the given format' do
+        Tempfile.create(tempfile) do |output_file|
+          subject.convert_file(masscan_path, output_file, input_format: :json, format: :csv)
           output_file.rewind
 
           expect(output_file.read).to eq(expected_csv)

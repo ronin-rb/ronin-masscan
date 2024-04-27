@@ -1,0 +1,3 @@
+type,status.status,status.protocol,status.port,status.reason,status.ttl,status.ip,status.timestamp,banner.protocol,banner.port,banner.ip,banner.timestamp,banner.app_protocol,banner.payload
+status,open,tcp,80,"syn,ack",54,93.184.216.34,2021-08-26 08:50:21 +0200
+banner,,,,,,,,tcp,80,93.184.216.34,2021-08-26 08:50:21 +0200,html_title,404 - Not Found
