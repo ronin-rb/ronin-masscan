@@ -8,7 +8,7 @@ RSpec.describe Ronin::Masscan::Converter do
   let(:masscan_path)  { File.join(fixtures_path, 'converters', 'input.json') }
   let(:timestamp)     { JSON.parse(File.read(masscan_path))[0]["timestamp"].to_i }
   let(:masscan_file)  { Masscan::OutputFile.new(masscan_path) }
-  let(:expected_json) do
+  let(:json_data) do
     [
       {
         status:    :open,
@@ -27,8 +27,9 @@ RSpec.describe Ronin::Masscan::Converter do
         app_protocol: 'html_title',
         payload:      '404 - Not Found'
       }
-    ].to_json
+    ]
   end
+  let(:expected_json) { json_data.to_json }
   let(:csv_data) do
     [
       [
