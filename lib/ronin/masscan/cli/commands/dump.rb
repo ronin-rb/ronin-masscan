@@ -176,12 +176,12 @@ module Ronin
             case target.port
             when 80
               puts URI::HTTP.build(
-                host: target.ip,
+                host: target.ip.to_s,
                 port: target.port
               )
             when 443
               puts URI::HTTPS.build(
-                host: target.ip,
+                host: target.ip.to_s,
                 port: target.port
               )
             end
