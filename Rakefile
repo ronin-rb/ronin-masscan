@@ -39,3 +39,5 @@ CommandKit::Completion::Task.new(
   class_name:  'Ronin::Masscan::CLI',
   output_file: 'data/completions/ronin-masscan'
 )
+
+task :setup => %w[man command_kit:completion]
