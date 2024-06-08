@@ -18,6 +18,7 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+require 'ronin/masscan/exceptions'
 require 'ronin/masscan/importer'
 require 'ronin/core/home'
 require 'masscan/command'
@@ -45,10 +46,15 @@ module Ronin
     # @param [Hash{Symbol => Object}] kwargs
     #   Additional keyword arguments for `masscan`.
     #
-    # @return [::Masscan::OutputFile, false, nil]
+    # @return [::Masscan::OutputFile]
     #   If the `masscan` command was sucessful, the parsed masscan data will be
-    #   returned. If the `masscan` command failed then `false` will be returned.
-    #   If `masscan` is not installed, then `nil` is returned.
+    #   returned.
+    #
+    # @raise [NotInstalled]
+    #   The `masscan` command is not installed.
+    #
+    # @raise [ScanFailed]
+    #   The `masscan` scan failed.
     #
     # @see https://rubydoc.info/gems/ruby-masscan/Masscan/OutputFile
     #
@@ -68,12 +74,15 @@ module Ronin
         masscan.output_file = tempfile.path
       end
 
-      status  = masscan.run_command
+      status = masscan.run_command
 
-      if status
-        return ::Masscan::OutputFile.new(masscan.output_file)
+      case status
+      when nil
+        raise(NotInstalled,"the masscan command is not installed")
+      when false
+        raise(ScanFailed,"masscan scan failed: #{masscan.command_argv.join(' ')}")
       else
-        return status
+        ::Masscan::OutputFile.new(masscan.output_file)
       end
     end
 

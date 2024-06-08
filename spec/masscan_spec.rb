@@ -43,8 +43,10 @@ describe Ronin::Masscan do
         allow(Kernel).to receive(:system).with({}, 'masscan', '--output-filename', anything, ips).and_return(false)
       end
 
-      it 'must return false' do
-        expect(subject.scan(ips)).to be(false)
+      it "must raise Ronin::Masscan::ScanFailed with the command arguments" do
+        expect {
+          subject.scan(ips)
+        }.to raise_error(Ronin::Masscan::ScanFailed,/\Amasscan scan failed: masscan --output-filename [^\s]+ [^\s]+\z/)
       end
     end
 
@@ -53,8 +55,10 @@ describe Ronin::Masscan do
         allow(Kernel).to receive(:system).with({}, 'masscan', '--output-filename', anything, ips).and_return(nil)
       end
 
-      it 'must return nil' do
-        expect(subject.scan(ips)).to be(nil)
+      it "must raise Ronin::Masscan::NotInstalled" do
+        expect {
+          subject.scan(ips)
+        }.to raise_error(Ronin::Masscan::NotInstalled,"the masscan command is not installed")
       end
     end
   end
