@@ -82,7 +82,7 @@ module Ronin
       when false
         raise(ScanFailed,"masscan scan failed: #{masscan.command_argv.join(' ')}")
       else
-        ::Masscan::OutputFile.new(masscan.output_file)
+        parse(masscan.output_file)
       end
     end
 
