@@ -95,6 +95,34 @@ Convert a binary `masscan` scan file to JSON:
 $ ronin-masscan convert masscan.bin masscan.json
 ```
 
+## Examples
+
+```ruby
+require 'ronin/masscan'
+
+output_file = Ronin::Masscan.scan('192.168.1.1', ports: [80,443])
+# => #<Masscan::OutputFile:...>
+```
+
+Accessing the masscan scan data:
+
+```ruby
+output_file.each do |record|
+  p record
+end
+```
+
+```
+#<struct Masscan::Status status=:open, protocol=:tcp, port=80, reason=[:syn, :ack], ttl=54, ip=#<IPAddr: IPv4:93.184.216.34/255.255.255.255>, timestamp=2021-08-26 16:07:33 -0700, mac=nil>
+#<struct Masscan::Status status=:open, protocol=:tcp, port=443, reason=[:syn, :ack], ttl=54, ip=#<IPAddr: IPv4:93.184.216.34/255.255.255.255>, timestamp=2021-08-26 16:07:33 -0700, mac=nil>
+#<struct Masscan::Status status=:open, protocol=:icmp, port=0, reason=[], ttl=54, ip=#<IPAddr: IPv4:93.184.216.34/255.255.255.255>, timestamp=2021-08-26 16:07:33 -0700, mac=nil>
+#<struct Masscan::Banner protocol=:tcp, port=443, ip=#<IPAddr: IPv4:93.184.216.34/255.255.255.255>, timestamp=2021-08-26 16:07:35 -0700, app_protocol=:ssl3, payload="TLS/1.1 cipher:0xc013, www.example.org, www.example.org, example.com, example.edu, example.net, example.org, www.example.com, www.example.edu, www.example.net">
+#<struct Masscan::Banner protocol=:tcp, port=443, ip=#<IPAddr: IPv4:93.184.216.34/255.255.255.255>, timestamp=2021-08-26 16:07:35 -0700, app_protocol=:x509_cert, payload="MIIG1TCCBb2gAwIBAgIQD74IsIVNBXOKsMzhya/uyTANBgkqhkiG9w0BAQsFADBPMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMSkwJwYDVQQDEyBEaWdpQ2VydCBUTFMgUlNBIFNIQTI1NiAyMDIwIENBMTAeFw0yMDExMjQwMDAwMDBaFw0yMTEyMjUyMzU5NTlaMIGQMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEUMBIGA1UEBxMLTG9zIEFuZ2VsZXMxPDA6BgNVBAoTM0ludGVybmV0IENvcnBvcmF0aW9uIGZvciBBc3NpZ25lZCBOYW1lcyBhbmQgTnVtYmVyczEYMBYGA1UEAxMPd3d3LmV4YW1wbGUub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuvzuzMoKCP8Okx2zvgucA5YinrFPEK5RQP1TX7PEYUAoBO6i5hIAsIKFmFxtW2sghERilU5rdnxQcF3fEx3sY4OtY6VSBPLPhLrbKozHLrQ8ZN/rYTb+hgNUeT7NA1mP78IEkxAj4qG5tli4Jq41aCbUlCt7equGXokImhC+UY5IpQEZS0tKD4vu2ksZ04Qetp0k8jWdAvMA27W3EwgHHNeVGWbJPC0Dn7RqPw13r7hFyS5TpleywjdY1nB7ad6kcZXZbEcaFZ7ZuerA6RkPGE+PsnZRb1oFJkYoXimsuvkVFhWeHQXCGC1cuDWSrM3cpQvOzKH2vS7d15+zGls4IwIDAQABo4IDaTCCA2UwHwYDVR0jBBgwFoAUt2ui6qiqhIx56rTaD5iyxZV2ufQwHQYDVR0OBBYEFCYa+OSxsHKEztqBBtInmPvtOj0XMIGBBgNVHREEejB4gg93d3cuZXhhbXBsZS5vcmeCC2V4YW1wbGUuY29tggtleGFtcGxlLmVkdYILZXhhbXBsZS5uZXSCC2V4YW1wbGUub3Jngg93d3cuZXhhbXBsZS5jb22CD3d3dy5leGFtcGxlLmVkdYIPd3d3LmV4YW1wbGUubmV0MA4GA1UdDwEB/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwgYsGA1UdHwSBgzCBgDA+oDygOoY4aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0VExTUlNBU0hBMjU2MjAyMENBMS5jcmwwPqA8oDqGOGh0dHA6Ly9jcmw0LmRpZ2ljZXJ0LmNv">
+#<struct Masscan::Banner protocol=:tcp, port=80, ip=#<IPAddr: IPv4:93.184.216.34/255.255.255.255>, timestamp=2021-08-26 16:07:35 -0700, app_protocol=:http_server, payload="ECS (sec/97A6)">
+#<struct Masscan::Banner protocol=:tcp, port=80, ip=#<IPAddr: IPv4:93.184.216.34/255.255.255.255>, timestamp=2021-08-26 16:07:35 -0700, app_protocol=:html_title, payload="404 - Not Found">
+#<struct Masscan::Banner protocol=:tcp, port=80, ip=#<IPAddr: IPv4:93.184.216.34/255.255.255.255>, timestamp=2021-08-26 16:07:35 -0700, app_protocol=:http, payload="HTTP/1.0 404 Not Found\r\nContent-Type: text/html\r\nDate: Thu, 26 Aug 2021 23:07:35 GMT\r\nServer: ECS (sec/97A6)\r\nContent-Length: 345\r\nConnection: close\r\n\r">
+```
+
 ## Requirements
 
 * [Ruby] >= 3.0.0
