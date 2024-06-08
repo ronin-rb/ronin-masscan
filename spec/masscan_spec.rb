@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'ronin/masscan'
 
 describe Ronin::Masscan do
-  let(:fixtures_dir) { File.join(__dir__,'spec','fixtures') }
+  let(:fixtures_dir) { File.join(__dir__,'fixtures') }
 
   describe ".parse" do
     let(:path) { File.join(fixtures_dir,'masscan.json') }
