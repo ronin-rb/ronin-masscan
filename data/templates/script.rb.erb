@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+require 'ronin/masscan'
+
+<%- if @script_type == :parser -%>
+<%-   if @output_file -%>
+output_file = Ronin::Masscan.parse(<%= @output_file.inspect %>)
+<%-   else -%>
+output_file = Ronin::Masscan.parse(ARGV[0])
+<%-   end -%>
+<%- else -%>
+output_file = Ronin::Masscan.scan(
+<%-   case @ips.length -%>
+<%-   when 0 -%>
+  *ARGV,
+<%-   when 1 -%>
+  <%= @ips[0].inspect %>,
+<%-   else -%>
+  *<%= @ips.inspect %>,
+<%-   end -%>
+<%-   if @ports -%>
+  ports: <%= @ports.inspect %>,
+<%-   else -%>
+  # ports: [22, 80, 443, 8000..9000],
+<%-   end -%>
+<%-   if @output_file -%>
+  output_file: <%= @output_file.inspect %>
+<%-   else -%>
+  # output_file: "path/to/masscan.bin"
+<%-   end -%>
+)
+<%- end -%>
+<% if @features[:printing] -%>
+
+output_file.each do |record|
+  p record
+end
+<%- end -%>
+<%- if @features[:import] -%>
+
+Ronin::DB.connect
+Ronin::Masscan::Importer.import(output_file)
+<%- end -%>

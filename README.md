@@ -41,6 +41,7 @@ Commands:
     grep
     help
     import
+    new
     print
     scan
 ```
@@ -93,6 +94,18 @@ Convert a binary `masscan` scan file to JSON:
 
 ```shell
 $ ronin-masscan convert masscan.bin masscan.json
+```
+
+Generate a new masscan scanner Ruby script:
+
+```shell
+$ ronin-masscan new scanner.rb --ips '192.168.1.*' --ports 22,80,443,8000-9000
+```
+
+Generate a new masscan output file parser script:
+
+```shell
+$ ronin-masscan new parser.rb --parser --xml-file path/to/masscan.bin --printing
 ```
 
 ## Examples

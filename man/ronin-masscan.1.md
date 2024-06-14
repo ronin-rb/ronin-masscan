@@ -37,6 +37,9 @@ scan output files, and importing scan data into the database.
 *import*
 : Imports a masscan scan file into ronin-db.
 
+*new*
+: Generates a new masscan Ruby script.
+
 *scan*
 : Runs masscan and outputs data as JSON or CSV or imports into the database.
 
@@ -46,4 +49,4 @@ Postmodern <postmodern.mod3@gmail.com>
 
 ## SEE ALSO
 
-[ronin-masscan-completion](ronin-masscan-completion.1.md) [ronin-masscan-convert](ronin-masscan-convert.1.md) [ronin-masscan-dump](ronin-masscan-dump.1.md) [ronin-masscan-import](ronin-masscan-import.1.md) [ronin-masscan-scan](ronin-masscan-scan.1.md)
+[ronin-masscan-completion](ronin-masscan-completion.1.md) [ronin-masscan-convert](ronin-masscan-convert.1.md) [ronin-masscan-dump](ronin-masscan-dump.1.md) [ronin-masscan-import](ronin-masscan-import.1.md) [ronin-masscan-new](ronin-masscan-new.1.md) [ronin-masscan-scan](ronin-masscan-scan.1.md)

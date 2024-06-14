@@ -26,6 +26,7 @@ generated_files:
  - man/ronin-masscan-dump.1
  - man/ronin-masscan-grep.1
  - man/ronin-masscan-import.1
+ - man/ronin-masscan-new.1
  - man/ronin-masscan-print.1
  - man/ronin-masscan-scan.1
 
