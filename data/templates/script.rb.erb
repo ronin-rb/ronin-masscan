@@ -9,26 +9,26 @@ output_file = Ronin::Masscan.parse(<%= @output_file.inspect %>)
 output_file = Ronin::Masscan.parse(ARGV[0])
 <%-   end -%>
 <%- else -%>
-output_file = Ronin::Masscan.scan(
+output_file = Ronin::Masscan.scan do |masscan|
 <%-   case @ips.length -%>
 <%-   when 0 -%>
-  *ARGV,
+  masscan.ips         = ARGV
 <%-   when 1 -%>
-  <%= @ips[0].inspect %>,
+  masscan.ips         = <%= @ips[0].inspect %>
 <%-   else -%>
-  *<%= @ips.inspect %>,
+  masscan.ips         = <%= @ips.inspect %>
 <%-   end -%>
 <%-   if @ports -%>
-  ports: <%= @ports.inspect %>,
+  masscan.ports       = <%= @ports.inspect %>
 <%-   else -%>
-  # ports: [22, 80, 443, 8000..9000],
+  # masscan.ports       = [22, 80, 443, 8000..9000]
 <%-   end -%>
 <%-   if @output_file -%>
-  output_file: <%= @output_file.inspect %>
+  masscan.output_file = <%= @output_file.inspect %>
 <%-   else -%>
-  # output_file: "path/to/masscan.bin"
+  # masscan.output_file = "path/to/masscan.bin"
 <%-   end -%>
-)
+end
 <%- end -%>
 <% if @features[:printing] -%>
 

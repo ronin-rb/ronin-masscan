@@ -61,11 +61,9 @@ module Ronin
     # @api public
     #
     def self.scan(*ips,**kwargs,&block)
-      if ips.empty?
-        raise(ArgumentError,"must specify at least one IP address")
-      end
-
       masscan = ::Masscan::Command.new(ips: ips, **kwargs,&block)
+
+      masscan.ips ||= ips
 
       unless masscan.output_file
         FileUtils.mkdir_p(CACHE_DIR)

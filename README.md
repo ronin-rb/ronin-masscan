@@ -115,6 +115,12 @@ require 'ronin/masscan'
 
 output_file = Ronin::Masscan.scan('192.168.1.1', ports: [80,443])
 # => #<Masscan::OutputFile:...>
+
+output_file = Ronin::Masscan.scan do |masscan|
+  masscan.ports = [80,443]
+  masscan.ips   = '192.168.1.1'
+end
+# => #<Masscan::OutputFile:...>
 ```
 
 Accessing the masscan scan data:

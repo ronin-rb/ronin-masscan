@@ -147,18 +147,18 @@ describe Ronin::Masscan::CLI::Commands::New do
       subject.run(path)
     end
 
-    it "must generate a new file containing a new `Ronin::Masscan.scan(...)`" do
+    it "must generate a new file containing a new `Ronin::Masscan.scan`" do
       expect(File.read(path)).to eq(
         <<~RUBY
           #!/usr/bin/env ruby
 
           require 'ronin/masscan'
 
-          output_file = Ronin::Masscan.scan(
-            *ARGV,
-            # ports: [22, 80, 443, 8000..9000],
-            # output_file: "path/to/masscan.bin"
-          )
+          output_file = Ronin::Masscan.scan do |masscan|
+            masscan.ips         = ARGV
+            # masscan.ports       = [22, 80, 443, 8000..9000]
+            # masscan.output_file = "path/to/masscan.bin"
+          end
         RUBY
       )
     end
@@ -230,18 +230,18 @@ describe Ronin::Masscan::CLI::Commands::New do
       context "and when given the '--scanner' option" do
         let(:argv) { super() + %w[--scanner] }
 
-        it "must generate a new file containing a new `Ronin::Masscan.scan(...)` instead" do
+        it "must generate a new file containing a new `Ronin::Masscan.scan` instead" do
           expect(File.read(path)).to eq(
             <<~RUBY
               #!/usr/bin/env ruby
 
               require 'ronin/masscan'
 
-              output_file = Ronin::Masscan.scan(
-                *ARGV,
-                # ports: [22, 80, 443, 8000..9000],
-                # output_file: "path/to/masscan.bin"
-              )
+              output_file = Ronin::Masscan.scan do |masscan|
+                masscan.ips         = ARGV
+                # masscan.ports       = [22, 80, 443, 8000..9000]
+                # masscan.output_file = "path/to/masscan.bin"
+              end
             RUBY
           )
         end
@@ -258,11 +258,11 @@ describe Ronin::Masscan::CLI::Commands::New do
 
             require 'ronin/masscan'
 
-            output_file = Ronin::Masscan.scan(
-              *ARGV,
-              # ports: [22, 80, 443, 8000..9000],
-              # output_file: "path/to/masscan.bin"
-            )
+            output_file = Ronin::Masscan.scan do |masscan|
+              masscan.ips         = ARGV
+              # masscan.ports       = [22, 80, 443, 8000..9000]
+              # masscan.output_file = "path/to/masscan.bin"
+            end
 
             output_file.each do |record|
               p record
@@ -282,11 +282,11 @@ describe Ronin::Masscan::CLI::Commands::New do
 
             require 'ronin/masscan'
 
-            output_file = Ronin::Masscan.scan(
-              *ARGV,
-              # ports: [22, 80, 443, 8000..9000],
-              # output_file: "path/to/masscan.bin"
-            )
+            output_file = Ronin::Masscan.scan do |masscan|
+              masscan.ips         = ARGV
+              # masscan.ports       = [22, 80, 443, 8000..9000]
+              # masscan.output_file = "path/to/masscan.bin"
+            end
 
             Ronin::DB.connect
             Ronin::Masscan::Importer.import(output_file)
@@ -299,18 +299,18 @@ describe Ronin::Masscan::CLI::Commands::New do
       let(:file) { 'path/to/masscan.bin' }
       let(:argv) { ['--output-file', file] }
 
-      it "must add an `output_file:` keyword argument to `Ronin::Masscan.scan(...)` with the given file" do
+      it "must add an `masscan.output_file =` keyword argument to `Ronin::Masscan.scan` with the given file" do
         expect(File.read(path)).to eq(
           <<~RUBY
             #!/usr/bin/env ruby
 
             require 'ronin/masscan'
 
-            output_file = Ronin::Masscan.scan(
-              *ARGV,
-              # ports: [22, 80, 443, 8000..9000],
-              output_file: #{file.inspect}
-            )
+            output_file = Ronin::Masscan.scan do |masscan|
+              masscan.ips         = ARGV
+              # masscan.ports       = [22, 80, 443, 8000..9000]
+              masscan.output_file = #{file.inspect}
+            end
           RUBY
         )
       end
@@ -320,18 +320,18 @@ describe Ronin::Masscan::CLI::Commands::New do
       let(:ports) { [22, 80, 443] }
       let(:argv)  { ['--ports', "#{ports.join(',')}"] }
 
-      it "must add an `ports:` keyword argument to `Ronin::Masscan.scan(...)` with an Array of the given port numbers" do
+      it "must add an `masscan.ports =` keyword argument to `Ronin::Masscan.scan` with an Array of the given port numbers" do
         expect(File.read(path)).to eq(
           <<~RUBY
             #!/usr/bin/env ruby
 
             require 'ronin/masscan'
 
-            output_file = Ronin::Masscan.scan(
-              *ARGV,
-              ports: #{ports.inspect},
-              # output_file: "path/to/masscan.bin"
-            )
+            output_file = Ronin::Masscan.scan do |masscan|
+              masscan.ips         = ARGV
+              masscan.ports       = #{ports.inspect}
+              # masscan.output_file = "path/to/masscan.bin"
+            end
           RUBY
         )
       end
@@ -353,18 +353,18 @@ describe Ronin::Masscan::CLI::Commands::New do
         ['--ports', "#{start_port1}-#{stop_port1},#{start_port2}-#{stop_port2}"]
       end
 
-      it "must add an `ports:` keyword argument to `Ronin::Masscan.scan(...)` with an Array of the given port ranges" do
+      it "must add an `masscan.ports =` keyword argument to `Ronin::Masscan.scan` with an Array of the given port ranges" do
         expect(File.read(path)).to eq(
           <<~RUBY
             #!/usr/bin/env ruby
 
             require 'ronin/masscan'
 
-            output_file = Ronin::Masscan.scan(
-              *ARGV,
-              ports: #{ports.inspect},
-              # output_file: "path/to/masscan.bin"
-            )
+            output_file = Ronin::Masscan.scan do |masscan|
+              masscan.ips         = ARGV
+              masscan.ports       = #{ports.inspect}
+              # masscan.output_file = "path/to/masscan.bin"
+            end
           RUBY
         )
       end
@@ -390,18 +390,18 @@ describe Ronin::Masscan::CLI::Commands::New do
         ['--ports', "#{port1},#{port2},#{start_port1}-#{stop_port1},#{start_port2}-#{stop_port2}"]
       end
 
-      it "must add an `ports:` keyword argument to `Ronin::Masscan.scan(...)` with an Array of the given port numbers and ranges" do
+      it "must add an `masscan.ports =` keyword argument to `Ronin::Masscan.scan` with an Array of the given port numbers and ranges" do
         expect(File.read(path)).to eq(
           <<~RUBY
             #!/usr/bin/env ruby
 
             require 'ronin/masscan'
 
-            output_file = Ronin::Masscan.scan(
-              *ARGV,
-              ports: #{ports.inspect},
-              # output_file: "path/to/masscan.bin"
-            )
+            output_file = Ronin::Masscan.scan do |masscan|
+              masscan.ips         = ARGV
+              masscan.ports       = #{ports.inspect}
+              # masscan.output_file = "path/to/masscan.bin"
+            end
           RUBY
         )
       end
