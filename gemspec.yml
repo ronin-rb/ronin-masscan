@@ -1,9 +1,9 @@
 name: ronin-masscan
 summary: A Ruby library and CLI for working with masscan.
 description: |
-  ronin-masscan is a Ruby library for working with masscan. ronin-masscan can
-  parse masscan scan files, convert masscan files into JSON or CSV, or import
-  masscan scan data into the ronin-db database.
+  ronin-masscan is a Ruby library and CLI for working with masscan.
+  ronin-masscan can parse masscan scan files, convert masscan files into JSON or
+  CSV, or import masscan scan data into the ronin-db database.
 
 license: LGPL-3.0
 authors: Postmodern
