@@ -18,7 +18,7 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/cli/port_list'
+require_relative 'port_list'
 
 module Ronin
   module Masscan

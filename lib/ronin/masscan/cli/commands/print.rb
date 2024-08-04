@@ -18,8 +18,8 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/cli/command'
-require 'ronin/masscan/cli/filtering_options'
+require_relative '../command'
+require_relative '../filtering_options'
 
 require 'masscan/output_file'
 require 'command_kit/printing/indent'

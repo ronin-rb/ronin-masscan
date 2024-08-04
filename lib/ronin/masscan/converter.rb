@@ -18,7 +18,7 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/converters'
+require_relative 'converters'
 
 require 'masscan/output_file'
 

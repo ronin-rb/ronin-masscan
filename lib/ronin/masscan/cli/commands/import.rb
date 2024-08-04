@@ -18,8 +18,8 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/cli/command'
-require 'ronin/masscan/cli/importable'
+require_relative '../command'
+require_relative '../importable'
 
 module Ronin
   module Masscan

@@ -18,8 +18,8 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/converters/json'
-require 'ronin/masscan/converters/csv'
+require_relative 'converters/json'
+require_relative 'converters/csv'
 
 module Ronin
   module Masscan

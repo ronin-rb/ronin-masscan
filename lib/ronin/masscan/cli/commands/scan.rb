@@ -18,11 +18,11 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/cli/command'
-require 'ronin/masscan/cli/importable'
-require 'ronin/masscan/converter'
-require 'ronin/core/cli/logging'
+require_relative '../command'
+require_relative '../importable'
+require_relative '../../converter'
 
+require 'ronin/core/cli/logging'
 require 'tempfile'
 require 'set'
 

@@ -18,8 +18,9 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/exceptions'
-require 'ronin/masscan/importer'
+require_relative 'masscan/exceptions'
+require_relative 'masscan/importer'
+
 require 'ronin/core/home'
 require 'masscan/command'
 require 'masscan/output_file'

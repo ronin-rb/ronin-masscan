@@ -18,7 +18,8 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/importer'
+require_relative '../importer'
+
 require 'ronin/db/cli/database_options'
 require 'ronin/db/cli/printing'
 require 'ronin/core/cli/logging'

@@ -18,9 +18,9 @@
 # along with ronin-masscan.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-require 'ronin/masscan/root'
-
 require 'ronin/core/cli/command'
+
+require_relative '../root'
 
 module Ronin
   module Masscan
